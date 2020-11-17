@@ -1,0 +1,32 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-center
+eureka:
+  #心跳间隔
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    hostname: localhost
+  server:
+    # 自我保护机制
+    # 当Eureka Server节点在短时间内丢失过多的客户端时（可能发送了网络故障），
+    # 那么这个节点将进入自我保护模式，不再注销任何微服务，当网络故障回复后，该节点会自动退出自我保护模式。
+    #自我保护模式的架构哲学是宁可放过一个，决不可错杀一千 默认true
+    enable-self-preservation: false
+    #自我保护系数，默认0.85
+    renewal-percent-threshold: 0.85
+    #续期时间，即扫描失效服务的间隔时间
+    eviction-interval-timer-in-ms: 5000
+  client:
+    #开启健康检查
+    healthcheck:
+      enabled: true
+    # 是否把自己作为服务注册到其他服务注册中心
+    register-with-eureka: false
+    # 是否从其他的服务中心同步服务列表
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
