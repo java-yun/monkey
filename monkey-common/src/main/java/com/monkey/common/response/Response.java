@@ -1,5 +1,6 @@
 package com.monkey.common.response;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.monkey.common.code.BizCode;
 
 /**
@@ -8,6 +9,7 @@ import com.monkey.common.code.BizCode;
  * @version 0.0.1
  * @date 2020/11/13 14:10
  */
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public record Response<T>(String code, String msg, T data) {
 
     public static <T> Response<T> ok(T data) {
