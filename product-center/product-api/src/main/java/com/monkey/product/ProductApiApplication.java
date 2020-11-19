@@ -1,5 +1,7 @@
 package com.monkey.product;
 
+import com.monkey.product.bo.ProductIndex;
+import com.monkey.product.repository.ElasticsearchOperateRepository;
 import com.monkey.product.service.ProductInitService;
 import com.monkey.product.service.ProductService;
 import com.monkey.product.thread.ProductThreadPoolManager;
@@ -25,6 +27,9 @@ public class ProductApiApplication implements CommandLineRunner {
     @Autowired
     private ProductInitService productInitService;
 
+    @Autowired
+    private ElasticsearchOperateRepository elasticsearchOperateRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(ProductApiApplication.class, args);
     }
@@ -38,6 +43,8 @@ public class ProductApiApplication implements CommandLineRunner {
     private void syncProductToEs() {
         //查询上架商品
         var products = this.productService.getOnSaleProduct();
+        //创建索引
+        this.elasticsearchOperateRepository.createIndex(ProductIndex.class);
     }
 
     private void initProduct() {

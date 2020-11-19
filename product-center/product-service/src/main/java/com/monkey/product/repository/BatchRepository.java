@@ -39,7 +39,7 @@ public class BatchRepository {
             String identity;
             try {
                 //获取表名
-                tableName = ObjectUtils.getClassAnnotationAttr(list.get(0), Table.class, "name");
+                tableName = ObjectUtils.getClassAnnotationAttr(list.get(0).getClass(), Table.class, "name");
                 //获取表字段以及字段值
                 records = ObjectUtils.getListElementAttrValue(list, Column.class, "name");
                 //获取自增主键字段的key

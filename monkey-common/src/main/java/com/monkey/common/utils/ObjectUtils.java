@@ -68,15 +68,15 @@ public class ObjectUtils {
 
     /**
      * 获取类  指定注解的指定属性值
-     * @param obj 类的实例
-     * @param clazz 注解的class
+     * @param clazz 类的class
+     * @param annotationClazz 注解的class
      * @param fieldName 注解的字段名
      * @return String
      * @throws NoSuchFieldException NoSuchFieldException
      * @throws IllegalAccessException IllegalAccessException
      */
-    public static String getClassAnnotationAttr(Object obj, Class clazz, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        Annotation annotation = obj.getClass().getDeclaredAnnotation(clazz);
+    public static String getClassAnnotationAttr(Class<?> clazz, Class<? extends Annotation> annotationClazz, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Annotation annotation = clazz.getDeclaredAnnotation(annotationClazz);
         Object value = getAnnotationValue(annotation, fieldName);
         return Objects.nonNull(value) ? value.toString() : null;
     }

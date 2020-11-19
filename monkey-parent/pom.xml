@@ -34,7 +34,7 @@
         <slf4j.version>1.7.30</slf4j.version>
         <junit.version>4.13.1</junit.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
-        <jackson.annotations.version>2.5.1</jackson.annotations.version>
+        <jackson.annotations.version>2.9.9</jackson.annotations.version>
     </properties>
 
     <dependencyManagement>
