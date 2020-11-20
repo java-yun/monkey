@@ -14,5 +14,7 @@ public final class BusinessConstants {
 
     public static final String PRODUCT_INDEX_V1 = "product_index_v1";
 
-    public static final String PRODUCT_INDEX_V2 = "PRODUCT_INDEX_V2";
+    public static final String PRODUCT_INDEX_V2 = "product_index_v2";
+
+    public static final String PRODUCT_INDEX_ALIAS = "product_index_alias";
 }

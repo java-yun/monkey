@@ -100,4 +100,22 @@ public class ObjectUtils {
         return memberValues.get(fieldName);
     }
 
+    /**
+     * 修改类注解 的 指定属性值
+     * @param clazz 目标类class
+     * @param annotationClazz 目标注解
+     * @param fieldName 字段名
+     * @param fieldValue 字段新值
+     * @throws NoSuchFieldException NoSuchFieldException
+     * @throws IllegalAccessException IllegalAccessException
+     */
+    public static void changeAnnotationFieldValue(Class<?> clazz, Class<? extends Annotation> annotationClazz, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException {
+        Annotation annotation = clazz.getDeclaredAnnotation(annotationClazz);
+        InvocationHandler handler = Proxy.getInvocationHandler(annotation);
+        Field annotationField = handler.getClass().getDeclaredField("memberValues");
+        annotationField.setAccessible(true);
+        Map memberValues = (Map) annotationField.get(handler);
+        //修改属性值
+        memberValues.put(fieldName, fieldValue);
+    }
 }

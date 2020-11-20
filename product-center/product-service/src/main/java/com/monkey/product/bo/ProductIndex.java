@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -27,7 +26,7 @@ import java.util.Date;
 @Document(indexName = BusinessConstants.PRODUCT_INDEX_V1, shards = 1, replicas = 1, refreshInterval = "-1")
 public class ProductIndex {
 
-    @Id
+    @Field(type = FieldType.Integer, index = false)
     private Integer id;
 
     @Field(type = FieldType.Keyword)
