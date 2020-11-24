@@ -48,7 +48,8 @@ public abstract class ThreadPoolManager {
     }
 
     /**
-     * 提交task
+     * 提交task 返回的future.get()会是主线程阻塞，
+     *   阻塞原因：在获取线程的执行结果没有获取到，会等待线程执行完成拿到结果，然后执行后面代码
      * @param runnable task
      * @return Future<?>
      */

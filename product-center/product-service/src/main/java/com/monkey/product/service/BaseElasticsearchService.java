@@ -44,10 +44,12 @@ public abstract class BaseElasticsearchService {
 
     /**
      * es 同步数据
+     * @param indexName 索引名称
      */
-    protected abstract void syncDataToEs();
+    protected abstract void syncDataToEs(String indexName);
 
-    protected final void execute() {
+    public final void execute() {
+        log.info("sync data to es start.......................");
         var indexAlias = this.getIndexAlias();
         var indexNames = this.getIndexNames();
         try {
@@ -59,14 +61,33 @@ public abstract class BaseElasticsearchService {
             var hitIndex = this.changeAliasToAnotherIndex(indexAlias, indexNames, indexName);
             //删除原索引，创建索引，然后同步数据
             for (String index: indexNames) {
+                if (index.equals(hitIndex)) {
+                    continue;
+                }
                 //删除索引
-                this.elasticsearchOperateRepository.deleteIndex(index);
-                //创建所以
+                if (this.elasticsearchOperateRepository.isIndexExists(index)) {
+                    this.elasticsearchOperateRepository.deleteIndex(index);
+                }
+                //创建索引
                 this.elasticsearchOperateRepository.createIndex(this.getClazz(), index);
                 //数据同步
-                this.syncDataToEs();
-                //TODO
+                this.syncDataToEs(index);
             }
+            if (Objects.nonNull(hitIndex) && indexNames.contains(hitIndex)) {
+                //别名迁移，同步数据
+                this.changeAliasToAnotherIndex(indexAlias, indexNames, hitIndex);
+                //删除索引
+                if (this.elasticsearchOperateRepository.isIndexExists(hitIndex)) {
+                    this.elasticsearchOperateRepository.deleteIndex(hitIndex);
+                }
+                //创建索引
+                this.elasticsearchOperateRepository.createIndex(this.getClazz(), hitIndex);
+                //数据同步
+                this.syncDataToEs(hitIndex);
+            } else {
+                this.changeAliasToAnotherIndex(indexAlias, indexNames, null);
+            }
+            log.info("sync data to es finish.......................");
         } catch (IOException e) {
             log.error("elasticsearch data sync error, indexAlias: {}", indexAlias, e);
             throw SystemException.throwException(BizCode.DATA_SYNC_ERROR);

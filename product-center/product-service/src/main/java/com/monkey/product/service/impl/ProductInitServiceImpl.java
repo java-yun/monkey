@@ -48,8 +48,6 @@ public class ProductInitServiceImpl implements ProductInitService {
 
     private static final int FOR_LENGTH = 1;
 
-    private static final int BATCH_SIZE = 5;
-
     @Autowired
     private BatchRepository batchRepository;
 
@@ -59,8 +57,8 @@ public class ProductInitServiceImpl implements ProductInitService {
     @Override
     public void init() {
         for (int i = 0; i < FOR_LENGTH; i++) {
-            var products = Lists.newArrayListWithCapacity(BATCH_SIZE);
-            for (int j = 0; j < BATCH_SIZE; j++) {
+            var products = Lists.newArrayListWithCapacity(BusinessConstants.PRODUCT_BATCH_INSERT_SIZE);
+            for (int j = 0; j < BusinessConstants.PRODUCT_BATCH_INSERT_SIZE; j++) {
                 var name = CollectionUtils.getListRandomElement(NAME);
                 var auditStatus = CollectionUtils.getListRandomElement(AUDIT_STATUS);
                 var isOnSale = AuditStatusEnum.REVIEW_TRIAL == AuditStatusEnum.fromValue(auditStatus) ? TrueFalseFlagConstants.TRUE : TrueFalseFlagConstants.FALSE;
@@ -90,6 +88,7 @@ public class ProductInitServiceImpl implements ProductInitService {
             }
             this.batchRepository.batchInsert(products);
         }
+        log.info("{} insert data to db success......", Thread.currentThread().getName());
     }
 
     /**

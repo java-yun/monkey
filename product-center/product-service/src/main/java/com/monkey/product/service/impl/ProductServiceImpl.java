@@ -6,6 +6,8 @@ import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
 import com.monkey.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +21,11 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
     private ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public void save(Product product) {
@@ -35,5 +40,15 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean hasProductRecord() {
         return this.productRepository.count() > 0;
+    }
+
+    @Override
+    public long getOnSaleTotalCount() {
+        return productRepository.countOnSale();
+    }
+
+    @Override
+    public List<Product> getOnSaleProductWithLimit(int cursor, int size) {
+        return this.productRepository.getOnSaleProductWithLimit(cursor, size);
     }
 }

@@ -1,10 +1,10 @@
 package com.monkey.product;
 
-import com.monkey.product.bo.ProductIndex;
-import com.monkey.product.repository.ElasticsearchOperateRepository;
 import com.monkey.product.service.ProductInitService;
 import com.monkey.product.service.ProductService;
+import com.monkey.product.service.impl.ProductElasticsearchService;
 import com.monkey.product.thread.ProductThreadPoolManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -12,10 +12,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
 /**
  * 商品服务
  * @author jiangyun
  */
+@Slf4j
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
@@ -28,7 +32,7 @@ public class ProductApiApplication implements CommandLineRunner {
     private ProductInitService productInitService;
 
     @Autowired
-    private ElasticsearchOperateRepository elasticsearchOperateRepository;
+    private ProductElasticsearchService productElasticsearchService;
 
     public static void main(String[] args) {
         SpringApplication.run(ProductApiApplication.class, args);
@@ -37,22 +41,27 @@ public class ProductApiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         this.initProduct();
-        this.syncProductToEs();
+//        this.syncProductToEs();
     }
 
     private void syncProductToEs() {
-        //查询上架商品
-        var products = this.productService.getOnSaleProduct();
-        //创建索引
-        this.elasticsearchOperateRepository.createIndex(ProductIndex.class);
+        productElasticsearchService.execute();
     }
 
     private void initProduct() {
         if (!this.productService.hasProductRecord()) {
-            ProductThreadPoolManager.getInstance().execute(productInitService::init);
-            ProductThreadPoolManager.getInstance().execute(productInitService::init);
-            ProductThreadPoolManager.getInstance().execute(productInitService::init);
-            ProductThreadPoolManager.getInstance().execute(productInitService::init);
+            Future<?> future1 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            Future<?> future2 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            Future<?> future3 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            Future<?> future4 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            try {
+                future1.get();
+                future2.get();
+                future3.get();
+                future4.get();
+            } catch (InterruptedException | ExecutionException e) {
+                log.error("get thread execute result exception", e);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.monkey.product;
 
+import com.monkey.product.bo.ProductIndex;
 import com.monkey.product.constants.BusinessConstants;
 import com.monkey.product.repository.ElasticsearchOperateRepository;
 import org.junit.jupiter.api.Test;
@@ -24,5 +25,11 @@ class ProductApiApplicationTests {
     public void getIndexByAliasTest() throws IOException {
         List<String> indexByAlias = this.elasticsearchRepository.getIndexByAlias(BusinessConstants.PRODUCT_INDEX_ALIAS);
         indexByAlias.forEach(System.out::println);
+    }
+
+    @Test
+    public void createIndexTest() {
+        this.elasticsearchRepository.createIndex(ProductIndex.class, "product_index_v1");
+        this.elasticsearchRepository.createIndex(ProductIndex.class, "product_index_v2");
     }
 }

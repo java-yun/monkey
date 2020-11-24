@@ -23,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(indexName = BusinessConstants.PRODUCT_INDEX_V1, shards = 1, replicas = 1, refreshInterval = "-1")
+@Document(indexName = "will_be_override", shards = 1, replicas = 1, refreshInterval = "-1")
 public class ProductIndex {
 
     @Field(type = FieldType.Integer, index = false)

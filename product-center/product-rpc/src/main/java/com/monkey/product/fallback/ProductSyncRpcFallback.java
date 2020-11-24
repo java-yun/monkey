@@ -16,6 +16,6 @@ public class ProductSyncRpcFallback implements ProductSyncRpc {
 
     @Override
     public Response<String> syncProductToEs() {
-        return Response.error(BizCode.RPC);
+        return Response.error(BizCode.RPC_TIMEOUT);
     }
 }

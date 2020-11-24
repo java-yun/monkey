@@ -30,4 +30,18 @@ public interface ProductService {
      * @return true or  false
      */
     boolean hasProductRecord();
+
+    /**
+     * 查询上架商品的总记录数
+     * @return totalCount
+     */
+    long getOnSaleTotalCount();
+
+    /**
+     * 按照id 排序批量查询
+     * @param cursor 起始id
+     * @param size 大小
+     * @return List<Product>
+     */
+    List<Product> getOnSaleProductWithLimit(int cursor, int size);
 }
