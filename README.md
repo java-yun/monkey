@@ -5,3 +5,4 @@
   springcloud：Hoxton.SR8    eureka、gateway、feignclient等
   redis：3.0
   elasticsearch：7.9   集群三个节点
+  xxl-job
