@@ -1,6 +1,5 @@
 package com.monkey.product.bo;
 
-import com.monkey.product.constants.BusinessConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,10 +64,10 @@ public class ProductIndex {
     @Field(type = FieldType.Byte)
     private Byte isOnSale;
 
-    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
+    @Field(type = FieldType.Long)
     private Date onSaleTime;
 
-    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
+    @Field(type = FieldType.Long)
     private Date offSaleTime;
 
     @Field(type = FieldType.Integer)

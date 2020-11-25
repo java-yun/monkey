@@ -143,6 +143,11 @@ public class ElasticsearchOperateRepository {
             public void afterBulk(long executionId, BulkRequest bulkRequest, BulkResponse bulkResponse) {
                 boolean hasFailures = bulkResponse.hasFailures();
                 log.info("---insert {} pieces of data successfully, executionId: {}, hasFailures: {}----", bulkRequest.numberOfActions(), executionId, hasFailures);
+                if (hasFailures) {
+                    bulkResponse.forEach(itemResponse -> {
+                        log.error("fail message: {}", itemResponse.getFailureMessage());
+                    });
+                }
             }
 
             @Override

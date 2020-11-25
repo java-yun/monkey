@@ -41,7 +41,7 @@ public class ProductApiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         this.initProduct();
-//        this.syncProductToEs();
+        this.syncProductToEs();
     }
 
     private void syncProductToEs() {
