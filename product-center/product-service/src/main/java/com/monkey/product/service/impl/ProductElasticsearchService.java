@@ -53,9 +53,9 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
     protected void syncDataToEs(String indexName) {
         //查询上架商品的总记录数
         long count = this.productService.getOnSaleTotalCount();
-        int cursor = 0;
-        int times = NumberUtils.getDivUpValue((int) count, BusinessConstants.PRODUCT_BATCH_QUERY_SIZE);
-        BulkProcessor bulkProcessor = super.elasticsearchOperateRepository.initBulkProcessor(BusinessConstants.PRODUCT_BULK_SIZE);
+        var cursor = 0;
+        var times = NumberUtils.getDivUpValue((int) count, BusinessConstants.PRODUCT_BATCH_QUERY_SIZE);
+        var bulkProcessor = super.elasticsearchOperateRepository.initBulkProcessor(BusinessConstants.PRODUCT_BULK_SIZE);
         for (int i = 0; i < times; i++) {
             List<Product> products = this.productService.getOnSaleProductWithLimit(cursor, BusinessConstants.PRODUCT_BATCH_QUERY_SIZE);
             if (Objects.isNull(products) || products.size() < 1) {

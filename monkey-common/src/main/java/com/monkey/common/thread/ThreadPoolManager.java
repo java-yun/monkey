@@ -26,7 +26,7 @@ public abstract class ThreadPoolManager {
     }
 
     private ThreadPoolExecutor initThreadPoolExecutor() {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+        var threadPoolExecutor = new ThreadPoolExecutor(
                 corePoolSize(),
                 maxPoolSize(),
                 keepAliveTime(),

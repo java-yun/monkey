@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Random;
 
 /**
+ * 集合工具类
  * @author jiangyun
  * @version 0.0.1
- * @Description 集合工具类
  * @date 2020/11/11 9:48
  */
 public class CollectionUtils {
@@ -21,7 +21,7 @@ public class CollectionUtils {
         if (Objects.isNull(list) || list.size() < 1) {
             return null;
         }
-        Random random = new Random();
+        var random = new Random();
         return list.get(random.nextInt(list.size()));
     }
  }

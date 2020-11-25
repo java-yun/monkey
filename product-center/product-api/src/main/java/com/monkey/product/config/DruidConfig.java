@@ -31,7 +31,7 @@ public class DruidConfig {
     @Bean
     public ServletRegistrationBean<StatViewServlet> druidServlet() {
         log.info("init Druid Servlet Configuration ");
-        ServletRegistrationBean<StatViewServlet> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+        var servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
         // IP白名单
 //        servletRegistrationBean.addInitParameter("allow", "*");
         // IP黑名单(共同存在时，deny优先于allow)
@@ -45,7 +45,7 @@ public class DruidConfig {
     }
     @Bean
     public FilterRegistrationBean<WebStatFilter> filterRegistrationBean() {
-        FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
+        var filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
         filterRegistrationBean.addUrlPatterns("/*");
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;

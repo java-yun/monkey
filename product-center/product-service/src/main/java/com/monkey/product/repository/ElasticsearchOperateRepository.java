@@ -56,9 +56,9 @@ public class ElasticsearchOperateRepository {
      */
     public void createIndex(Class<?> clazz, String indexName){
         try {
-            Settings settings = ElasticsearchUtils.getSettings(clazz);
-            Map<String, Object> mappings = ElasticsearchUtils.getMappings(clazz);
-            CreateIndexRequest request = new CreateIndexRequest(indexName);
+            var settings = ElasticsearchUtils.getSettings(clazz);
+            var mappings = ElasticsearchUtils.getMappings(clazz);
+            var request = new CreateIndexRequest(indexName);
             request.settings(settings);
             request.mapping(mappings);
             this.client.indices().create(request, RequestOptions.DEFAULT);
@@ -84,7 +84,7 @@ public class ElasticsearchOperateRepository {
         List<String> list = Lists.newArrayList();
         var request = new GetAliasesRequest();
         request.aliases(indexAlias);
-        GetAliasesResponse response = this.client.indices().getAlias(request, RequestOptions.DEFAULT);
+        var response = this.client.indices().getAlias(request, RequestOptions.DEFAULT);
         var aliases = response.getAliases();
         aliases.forEach((indexName, aliasMetaData) -> {
             list.add(indexName);
@@ -109,10 +109,10 @@ public class ElasticsearchOperateRepository {
      * @return true false
      */
     public boolean addAliasToIndex(String indexAlias, String indexName) throws IOException {
-        IndicesAliasesRequest request = new IndicesAliasesRequest();
-        IndicesAliasesRequest.AliasActions aliasActions = new IndicesAliasesRequest.AliasActions(IndicesAliasesRequest.AliasActions.Type.ADD).index(indexName).alias(indexAlias);
+        var request = new IndicesAliasesRequest();
+        var aliasActions = new IndicesAliasesRequest.AliasActions(IndicesAliasesRequest.AliasActions.Type.ADD).index(indexName).alias(indexAlias);
         request.addAliasAction(aliasActions);
-        AcknowledgedResponse response = this.client.indices().updateAliases(request, RequestOptions.DEFAULT);
+        var response = this.client.indices().updateAliases(request, RequestOptions.DEFAULT);
         return response.isAcknowledged();
     }
 
@@ -123,7 +123,7 @@ public class ElasticsearchOperateRepository {
      */
     public boolean deleteIndex(String indexName) throws IOException {
         var request = new DeleteIndexRequest(indexName);
-        AcknowledgedResponse response = this.client.indices().delete(request, RequestOptions.DEFAULT);
+        var response = this.client.indices().delete(request, RequestOptions.DEFAULT);
         return response.isAcknowledged();
     }
 
@@ -133,7 +133,7 @@ public class ElasticsearchOperateRepository {
      * @return BulkProcessor
      */
     public BulkProcessor initBulkProcessor(int bulkSize) {
-        BulkProcessor.Listener listener = new BulkProcessor.Listener() {
+        var listener = new BulkProcessor.Listener() {
             @Override
             public void beforeBulk(long executionId, BulkRequest bulkRequest) {
                 log.info("---attempting to insert {} pieces of data, executionId: {}----", bulkRequest.numberOfActions(), executionId);
@@ -141,7 +141,7 @@ public class ElasticsearchOperateRepository {
 
             @Override
             public void afterBulk(long executionId, BulkRequest bulkRequest, BulkResponse bulkResponse) {
-                boolean hasFailures = bulkResponse.hasFailures();
+                var hasFailures = bulkResponse.hasFailures();
                 log.info("---insert {} pieces of data successfully, executionId: {}, hasFailures: {}----", bulkRequest.numberOfActions(), executionId, hasFailures);
                 if (hasFailures) {
                     bulkResponse.forEach(itemResponse -> {

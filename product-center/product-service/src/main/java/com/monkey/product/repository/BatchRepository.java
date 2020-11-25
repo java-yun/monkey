@@ -76,7 +76,7 @@ public class BatchRepository {
                 builder.append("),");
             }
             builder.deleteCharAt(builder.lastIndexOf(","));
-            String sql = builder.toString();
+            var sql = builder.toString();
             log.info("batch insert sql : {}", sql);
             var query = entityManager.createNativeQuery(sql);
             //设置值

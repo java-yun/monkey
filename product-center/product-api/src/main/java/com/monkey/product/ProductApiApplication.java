@@ -50,10 +50,10 @@ public class ProductApiApplication implements CommandLineRunner {
 
     private void initProduct() {
         if (!this.productService.hasProductRecord()) {
-            Future<?> future1 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            Future<?> future2 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            Future<?> future3 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            Future<?> future4 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            var future1 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            var future2 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            var future3 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
+            var future4 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
             try {
                 future1.get();
                 future2.get();

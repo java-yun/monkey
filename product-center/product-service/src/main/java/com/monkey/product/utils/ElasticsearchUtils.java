@@ -151,10 +151,10 @@ public class ElasticsearchUtils {
     }
 
     public static Settings getSettings(Class<?> clazz) {
-        Document document = clazz.getDeclaredAnnotation(Document.class);
-        short replicas = document.replicas();
-        short shards = document.shards();
-        String refreshInterval = document.refreshInterval();
+        var document = clazz.getDeclaredAnnotation(Document.class);
+        var replicas = document.replicas();
+        var shards = document.shards();
+        var refreshInterval = document.refreshInterval();
         return Settings.builder().put("index.number_of_shards", shards)
                 .put("index.number_of_replicas", replicas)
                 .put("index.refresh_interval", refreshInterval)

@@ -23,8 +23,8 @@ public class StringUtils {
      */
     public static String upperCharToUnderLine(String str) {
         if(Objects.nonNull(str) && !str.isBlank()){
-            StringBuilder builder = new StringBuilder(str);
-            Matcher mc = PATTERN.matcher(str);
+            var builder = new StringBuilder(str);
+            var mc = PATTERN.matcher(str);
             int i = 0;
             while (mc.find()) {
                 builder.replace(mc.start() + i, mc.end() + i, "_" + mc.group().toLowerCase());
