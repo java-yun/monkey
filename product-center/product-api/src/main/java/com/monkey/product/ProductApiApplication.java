@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * 商品服务
@@ -23,6 +23,7 @@ import java.util.concurrent.Future;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
+@ServletComponentScan
 public class ProductApiApplication implements CommandLineRunner {
 
     @Autowired

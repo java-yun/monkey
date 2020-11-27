@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.annotation.Resource;
+
 /**
  * 自定义web配置
  * @author jiangyun
@@ -17,12 +19,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CustomWebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
+    @Resource
     private MdcLogInterceptor mdcLogInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(mdcLogInterceptor).addPathPatterns("/product-list-rec");
+        registry.addInterceptor(mdcLogInterceptor).addPathPatterns("/product/list");
         log.info("MdcLogInterceptor register");
         WebMvcConfigurer.super.addInterceptors(registry);
     }

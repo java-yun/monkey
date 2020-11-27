@@ -32,4 +32,6 @@ public final class BusinessConstants {
      * 商品 批量插入 大小
      */
     public static final int PRODUCT_BATCH_INSERT_SIZE = 1000;
+
+    public static final int PRODUCT_ES_QUERY_SIZE = 100;
 }

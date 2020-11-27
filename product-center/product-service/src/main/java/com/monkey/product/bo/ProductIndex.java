@@ -24,7 +24,7 @@ import java.util.Date;
 @Document(indexName = "will_be_override", shards = 1, replicas = 1, refreshInterval = "-1")
 public class ProductIndex {
 
-    @Field(type = FieldType.Integer, index = false)
+    @Field(type = FieldType.Integer)
     private Integer id;
 
     @Field(type = FieldType.Keyword)

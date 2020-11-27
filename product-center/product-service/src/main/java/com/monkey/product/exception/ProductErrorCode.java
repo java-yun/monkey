@@ -14,6 +14,7 @@ public class ProductErrorCode extends BizCode {
     public static final ProductErrorCode TEST = new ProductErrorCode("000", "test");
     public static final ProductErrorCode PRODUCT_INIT_ERROR = new ProductErrorCode("001", "商品初始化异常");
     public static final ProductErrorCode INDEX_CREATE_ERROR = new ProductErrorCode("002", "es索引创建异常");
+    public static final ProductErrorCode PRODUCT_SEARCH_ERROR = new ProductErrorCode("003", "es查询异常");
 
     private ProductErrorCode(String code, String msg, CodePrefix codePrefix) {
         super(code, msg, codePrefix);

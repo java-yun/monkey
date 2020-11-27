@@ -1,6 +1,7 @@
 package com.monkey.product.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.monkey.common.utils.GeneratorUtils;
 import com.monkey.common.utils.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -12,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,32 +25,24 @@ import java.util.Objects;
 @Component
 public class MdcLogInterceptor implements HandlerInterceptor {
 
-    private static final String DOMAIN_ID = "domain_id";
+    private static final String SEARCH = "search";
 
     @Value("${mdc.open-search-recommend:false}")
     private boolean isOpenSearchMdc;
-
-    private List<String> domainId;
-
-    public void setDomainId(List<String> domainId) {
-        this.domainId = domainId;
-    }
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         var body = HttpUtils.getRequestBody(request);
         var params = JSON.parseObject(body);
-        if (isOpenSearchMdc && domainId.contains(params.getString(DOMAIN_ID))) {
-            MDC.put(DOMAIN_ID, params.getString(DOMAIN_ID));
-        }
+        MDC.put(SEARCH, GeneratorUtils.getUUID());
         log.info("search recommend request params: {}", params);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, ModelAndView modelAndView) throws Exception {
-        if (Objects.nonNull(MDC.get(DOMAIN_ID))) {
-            MDC.remove(DOMAIN_ID);
+        if (Objects.nonNull(MDC.get(SEARCH))) {
+            MDC.remove(SEARCH);
         }
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }

@@ -35,6 +35,7 @@ spring:
     # 合并多个DruidDataSource的监控数据
     #useGlobalDataSourceStat: true
 
+  # redis
   redis:
     database: 0
     host: 127.0.0.1
@@ -47,13 +48,16 @@ spring:
         min-idle: 0
     timeout: 5000
 
-
+  # es
   elasticsearch:
     rest:
       uris: http://127.0.0.1:9200,http://127.0.0.1:9201,http://127.0.0.1:9202
 
   jpa:
     show-sql: true
+
+  profiles:
+    active: @spring.profiles.active@
 
 eureka:
   client:
@@ -81,3 +85,6 @@ ribbon:
   ConnectTimeout: 10000
   ReadTimeout: 10000
   ServerListRefreshInterval: 2000
+
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml

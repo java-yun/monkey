@@ -1,7 +1,6 @@
 package com.monkey.product.repository;
 
 import com.google.common.collect.Lists;
-import com.monkey.common.utils.ObjectUtils;
 import com.monkey.product.exception.ProductErrorCode;
 import com.monkey.product.exception.ProductException;
 import com.monkey.product.utils.ElasticsearchUtils;
@@ -12,23 +11,21 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
-import org.springframework.data.elasticsearch.annotations.Document;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * elasticsearch 仓库操作
@@ -63,11 +60,12 @@ public class ElasticsearchOperateRepository {
             request.mapping(mappings);
             this.client.indices().create(request, RequestOptions.DEFAULT);
 //            ObjectUtils.changeAnnotationFieldValue(clazz, Document.class, "indexName", indexName);
+              //连续两次用同一个clazz创建索引，存在index_uuid相同异常，有待研究解决
 //            this.restTemplate.createIndex(clazz);
 //            this.restTemplate.putMapping(clazz);
-            log.info("index create success, index clazz: {}", clazz.getName());
+            log.info("index create success, indexName:{}, index clazz: {}", indexName, clazz.getName());
         } catch (NoSuchFieldException | IllegalAccessException | IOException e) {
-            log.error("index create error, index class :{}", clazz.getName(), e);
+            log.error("index create error, indexName:{}, index class :{}", indexName, clazz.getName(), e);
             throw ProductException.throwException(ProductErrorCode.INDEX_CREATE_ERROR);
         }
 
@@ -161,6 +159,17 @@ public class ElasticsearchOperateRepository {
                 .setFlushInterval(TimeValue.timeValueSeconds(5))
                 .setConcurrentRequests(2)
                 .build();
+    }
+
+    public SearchResponse doSearch(String[] indices, SearchSourceBuilder searchSourceBuilder, int size) throws IOException {
+        searchSourceBuilder.fetchSource(false);
+        searchSourceBuilder.timeout(new TimeValue(500));
+        searchSourceBuilder.size(size);
+//        searchSourceBuilder.searchAfter("aaa")
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.source(searchSourceBuilder);
+        searchRequest.indices(indices);
+        return this.client.search(searchRequest, RequestOptions.DEFAULT);
     }
 
 }
