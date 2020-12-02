@@ -17,21 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/11/26 9:41
  */
 @RestController
-@RequestMapping(value = "/product", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/search/product", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SearchController {
 
-    private ProductSearchService productSearchService;
+    private final ProductSearchService productSearchService;
 
     SearchController(ProductSearchService productSearchService) {
         this.productSearchService = productSearchService;
     }
 
     /**
-     * 查询商品
+     * 查询商品 es
      * @param productSearchRequest request
      * @return Response<ProductSearchResult>
      */
-    @RequestMapping(value = "list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public Response<ProductSearchResult> searchProduct(@RequestBody ProductSearchRequest productSearchRequest) {
         return Response.ok(this.productSearchService.searchProduct(productSearchRequest));
     }

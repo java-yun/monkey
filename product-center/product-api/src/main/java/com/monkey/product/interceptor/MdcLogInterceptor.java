@@ -27,8 +27,8 @@ public class MdcLogInterceptor implements HandlerInterceptor {
 
     private static final String SEARCH = "search";
 
-    @Value("${mdc.open-search-recommend:false}")
-    private boolean isOpenSearchMdc;
+    @Value("${log.mdc.open:false}")
+    private boolean isOpenMdc;
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {

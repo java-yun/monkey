@@ -88,3 +88,7 @@ ribbon:
 
 logging:
   config: classpath:logback-${spring.profiles.active}.xml
+
+log:
+  mdc:
+    open: true

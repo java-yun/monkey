@@ -24,14 +24,19 @@ public final class BusinessConstants {
     public static final int PRODUCT_BULK_SIZE = 4000;
 
     /**
-     * 商品 批量查询 大小
+     * 商品 批量查询 大小 db
      */
     public static final int PRODUCT_BATCH_QUERY_SIZE = 10000;
 
     /**
-     * 商品 批量插入 大小
+     * 商品 批量插入 大小 db
      */
     public static final int PRODUCT_BATCH_INSERT_SIZE = 1000;
 
+    /**
+     * es 查询 size
+     */
     public static final int PRODUCT_ES_QUERY_SIZE = 100;
+
+    public static final int SEARCH_KEYWORD_NOT_PARTICIPLE_MAX_LENGTH = 3;
 }

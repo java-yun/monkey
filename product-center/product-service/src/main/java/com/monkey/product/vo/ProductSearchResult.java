@@ -8,5 +8,5 @@ import java.util.List;
  * @version 0.0.1
  * @date 2020/11/26 14:25
  */
-public record ProductSearchResult(List<ProductSearch>productList) {
+public record ProductSearchResult(List<ProductSearch>productList, String afterKey) {
 }
