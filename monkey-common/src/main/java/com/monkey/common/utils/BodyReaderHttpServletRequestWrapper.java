@@ -21,7 +21,7 @@ public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapp
     public BodyReaderHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         var requestBody = HttpUtils.getRequestBody(request);
-        if (ValidUtils.isNullOrEmpty(requestBody)) {
+        if (Detect.isNullOrEmpty(requestBody)) {
             requestBody = "{}";
         }
         this.body = requestBody.getBytes();

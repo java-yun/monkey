@@ -14,8 +14,6 @@ import com.monkey.product.vo.ProductSearch;
 import com.monkey.product.vo.ProductSearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -47,20 +45,22 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     public ProductSearchResult searchProduct(ProductSearchRequest productSearchRequest) {
         var searchSourceBuilder = this.getSearchSourceBuilder(productSearchRequest);
         List<ProductSearch> esProducts = Lists.newArrayList();
-        Object[] searchAfter;
+        String afterKey = null;
         try {
             var response = elasticsearchOperateRepository.doSearch(new String[]{BusinessConstants.PRODUCT_INDEX_ALIAS}, searchSourceBuilder, BusinessConstants.PRODUCT_ES_QUERY_SIZE);
             var searchHits = response.getHits().getHits();
-            searchAfter = searchHits[searchHits.length - 1].getSortValues();
-            for (SearchHit searchHit: searchHits) {
-                var productSearch = JSONObject.parseObject(JSONObject.toJSONString(searchHit.getSourceAsMap()), ProductSearch.class);
-                esProducts.add(productSearch);
+            if (searchHits.length > 0) {
+                afterKey = SearchAfter.toAfterKey(searchHits[searchHits.length - 1].getSortValues());
+                for (SearchHit searchHit: searchHits) {
+                    var productSearch = JSONObject.parseObject(searchHit.getSourceAsString(), ProductSearch.class);
+                    esProducts.add(productSearch);
+                }
             }
         } catch (IOException e) {
             log.error("search product from elasticsearch exception, request:{}", JSON.toJSONString(productSearchRequest), e);
             throw ProductException.throwException(ProductErrorCode.PRODUCT_SEARCH_ERROR);
         }
-        return new ProductSearchResult(esProducts, SearchAfter.toAfterKey(searchAfter));
+        return new ProductSearchResult(esProducts, afterKey);
     }
 
     private SearchSourceBuilder getSearchSourceBuilder(ProductSearchRequest request) {
@@ -90,11 +90,11 @@ public class ProductSearchServiceImpl implements ProductSearchService {
             boolQueryBuilder.filter(QueryBuilders.rangeQuery("onSaleTime").gte(request.getOnSaleTime().getTime()));
         }
         //在 name、brief、description中分词查找
-        if (StringUtils.isNotEmpty(request.getQueryKey())) {
-            String searchKeyword = request.getQueryKey().trim();
+        if (StringUtils.isNotEmpty(request.getSearchKeyword())) {
+            String searchKeyword = request.getSearchKeyword().trim();
             //searchKeyword大于指定长度的，对searchKeyword进行分词匹配查询，否者不分词
             if (searchKeyword.length() > BusinessConstants.SEARCH_KEYWORD_NOT_PARTICIPLE_MAX_LENGTH) {
-                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(request.getQueryKey(), "name", "brief", "description"));
+                boolQueryBuilder.must(QueryBuilders.multiMatchQuery(searchKeyword, "name", "brief", "description"));
             } else {
                 boolQueryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.termQuery("name", searchKeyword))
                         .should(QueryBuilders.termQuery("brief", searchKeyword))
@@ -105,7 +105,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         if (StringUtils.isNotEmpty(request.getOrderByColumn())) {
             sourceBuilder.sort(SortBuilders.fieldSort(request.getOrderByColumn()).missing(0).order(SortOrder.fromString(request.getOrderByType())));
         } else {
-            sourceBuilder.sort(SortBuilders.fieldSort("onSaleTIme").missing(0).order(SortOrder.DESC))
+            sourceBuilder.sort(SortBuilders.fieldSort("onSaleTime").missing(0).order(SortOrder.DESC))
                 .sort(SortBuilders.scoreSort().order(SortOrder.DESC));
         }
         sourceBuilder.query(boolQueryBuilder);

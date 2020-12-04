@@ -41,8 +41,10 @@ public class ProductApiApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        this.initProduct();
-        this.syncProductToEs();
+        if (!this.productService.hasProductRecord()) {
+            this.initProduct();
+            this.syncProductToEs();
+        }
     }
 
     private void syncProductToEs() {
@@ -50,19 +52,19 @@ public class ProductApiApplication implements CommandLineRunner {
     }
 
     private void initProduct() {
-        if (!this.productService.hasProductRecord()) {
-            var future1 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            var future2 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            var future3 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            var future4 = ProductThreadPoolManager.getInstance().submit(productInitService::init);
-            try {
-                future1.get();
-                future2.get();
-                future3.get();
-                future4.get();
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("get thread execute result exception", e);
-            }
+        var future1 = ProductThreadPoolManager.getInstance().wrapSubmit(productInitService::init);
+        var future2 = ProductThreadPoolManager.getInstance().wrapSubmit(productInitService::init);
+        var future3 = ProductThreadPoolManager.getInstance().wrapSubmit(productInitService::init);
+        var future4 = ProductThreadPoolManager.getInstance().wrapSubmit(productInitService::init);
+        try {
+            //父线程等待子线程的执行结果，再执行后续代码
+            future1.get();
+            future2.get();
+            future3.get();
+            future4.get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("get thread execute result exception", e);
         }
+
     }
 }

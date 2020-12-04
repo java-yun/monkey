@@ -46,7 +46,7 @@ public class ProductInitServiceImpl implements ProductInitService {
             "物美价廉prefect奈斯绝了你值得拥有爱了爱了  一生中最爱 ");
 
 
-    private static final int FOR_LENGTH = 1;
+    private static final int FOR_LENGTH = 50;
 
     @Autowired
     private BatchRepository batchRepository;

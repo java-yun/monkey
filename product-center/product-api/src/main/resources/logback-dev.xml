@@ -6,7 +6,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder charset="UTF-8">
-            <pattern>%highlight([%-5p]) %magenta([%thread]) [%date{yyyy-MM-dd HH:mm:ss.SSS, Asia/Shanghai}] %cyan([%c:%L]) [%X{search}] - %msg%n</pattern>
+            <pattern>%highlight([%-5p]) %magenta([%thread]) [%date{yyyy-MM-dd HH:mm:ss.SSS, Asia/Shanghai}] %cyan([%c:%L]) [%X{request_id}] - %msg%n</pattern>
         </encoder>
     </appender>
 

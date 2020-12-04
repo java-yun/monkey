@@ -36,7 +36,7 @@ public class ProductSearchRequest {
 
     private Date onSaleTime;
 
-    private String queryKey;
+    private String searchKeyword;
 
     private String orderByType = "ASC";
 

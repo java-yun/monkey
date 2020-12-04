@@ -67,7 +67,7 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
                 products.forEach(product -> {
                     ProductIndex productIndex = ProductIndex.builder().build();
                     BeanUtils.copyProperties(product, productIndex);
-                    IndexRequest request = new IndexRequest(indexName).id(product.getCode()).source(JSONObject.toJSONString(productIndex), XContentType.JSON).opType(DocWriteRequest.OpType.CREATE);
+                    IndexRequest request = new IndexRequest(indexName).id(product.getCode() + "_" + product.getId()).source(JSONObject.toJSONString(productIndex), XContentType.JSON).opType(DocWriteRequest.OpType.CREATE);
                     bulkProcessor.add(request);
                 });
                 cursor = products.get(products.size() - 1).getId();

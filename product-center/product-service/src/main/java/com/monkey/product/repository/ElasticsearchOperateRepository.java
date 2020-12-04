@@ -162,7 +162,7 @@ public class ElasticsearchOperateRepository {
     }
 
     public SearchResponse doSearch(String[] indices, SearchSourceBuilder searchSourceBuilder, int size) throws IOException {
-        searchSourceBuilder.fetchSource(false);
+        searchSourceBuilder.fetchSource(true);
         searchSourceBuilder.timeout(new TimeValue(500));
         searchSourceBuilder.size(size);
 //        searchSourceBuilder.searchAfter("aaa")

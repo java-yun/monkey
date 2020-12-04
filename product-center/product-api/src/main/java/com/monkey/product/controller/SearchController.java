@@ -1,6 +1,7 @@
 package com.monkey.product.controller;
 
 import com.monkey.common.response.Response;
+import com.monkey.product.annotation.RestLog;
 import com.monkey.product.bo.ProductSearchRequest;
 import com.monkey.product.service.ProductSearchService;
 import com.monkey.product.vo.ProductSearchResult;
@@ -31,6 +32,7 @@ public class SearchController {
      * @param productSearchRequest request
      * @return Response<ProductSearchResult>
      */
+    @RestLog
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public Response<ProductSearchResult> searchProduct(@RequestBody ProductSearchRequest productSearchRequest) {
         return Response.ok(this.productSearchService.searchProduct(productSearchRequest));

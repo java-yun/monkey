@@ -34,11 +34,6 @@
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.monkey</groupId>
             <artifactId>product-service</artifactId>
         </dependency>
