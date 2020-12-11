@@ -5,6 +5,8 @@ import com.monkey.common.utils.NumberUtils;
 import com.monkey.product.bo.ProductIndex;
 import com.monkey.product.constants.BusinessConstants;
 import com.monkey.product.entity.Product;
+import com.monkey.product.exception.ProductErrorCode;
+import com.monkey.product.exception.ProductException;
 import com.monkey.product.repository.ElasticsearchOperateRepository;
 import com.monkey.product.service.BaseElasticsearchService;
 import com.monkey.product.service.ProductService;
@@ -15,6 +17,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -72,14 +75,23 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
                 });
                 cursor = products.get(products.size() - 1).getId();
             }
-            bulkProcessor.flush();
+             bulkProcessor.flush();
+            log.info("data add to bulk processor finished, waiting commit to es................................");
         } catch (Exception e) {
             log.error("product bulk sync es exception", e);
+            throw ProductException.throwException(ProductErrorCode.BULK_OPERATOR_ERROR);
         } finally {
             try {
-                bulkProcessor.awaitClose(100L, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                log.error("bulkProcessor awaitClose exception", e);
+                var awaitClose = bulkProcessor.awaitClose(100L, TimeUnit.SECONDS);
+                log.info("whether the insertion was completed in time: {}", awaitClose);
+                /*
+                    由于index 的 refreshInterval设置的是  -1  即 不自动刷新索引，所以插入结束之后一定要手动刷新索引，否则无数据
+                    为什么设置成   -1 ？
+                    大数据量插入时，不自动刷新可以提高插入效率
+                 */
+                this.elasticsearchOperateRepository.refreshIndex(indexName);
+            } catch (InterruptedException | IOException e) {
+                log.error("bulkProcessor awaitClose or refresh index exception", e);
             }
         }
     }

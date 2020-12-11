@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequestMapping(value = "/product")
 @RestController
-public class ProductRpcController {
+public class ProductSyncRpcController {
 
     private final ProductElasticsearchService productElasticsearchService;
 
-    ProductRpcController(ProductElasticsearchService productElasticsearchService) {
+    ProductSyncRpcController(ProductElasticsearchService productElasticsearchService) {
         this.productElasticsearchService = productElasticsearchService;
     }
 

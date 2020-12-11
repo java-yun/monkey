@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
+import org.elasticsearch.action.bulk.BackoffPolicy;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -20,6 +23,7 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Repository;
@@ -77,6 +81,7 @@ public class ElasticsearchOperateRepository {
      * 查询别名下的索引
      * @param indexAlias 别名
      * @return 索引列表
+     * @throws IOException IOException
      */
     public List<String> getIndexByAlias(String indexAlias) throws IOException {
         List<String> list = Lists.newArrayList();
@@ -94,6 +99,7 @@ public class ElasticsearchOperateRepository {
      * 判断索引是否存在
      * @param indexName 索引名
      * @return true false
+     * @throws IOException IOException
      */
     public boolean isIndexExists(String indexName) throws IOException {
         var request = new GetIndexRequest(indexName);
@@ -105,6 +111,7 @@ public class ElasticsearchOperateRepository {
      * @param indexAlias 别名
      * @param indexName 索引名
      * @return true false
+     * @throws IOException IOException
      */
     public boolean addAliasToIndex(String indexAlias, String indexName) throws IOException {
         var request = new IndicesAliasesRequest();
@@ -118,6 +125,7 @@ public class ElasticsearchOperateRepository {
      * 删除索引
      * @param indexName 索引名
      * @return true false
+     * @throws IOException IOException
      */
     public boolean deleteIndex(String indexName) throws IOException {
         var request = new DeleteIndexRequest(indexName);
@@ -129,6 +137,7 @@ public class ElasticsearchOperateRepository {
      * 获取批量操作的  BulkProcessor
      * @param bulkSize 批量大小
      * @return BulkProcessor
+     * @throws IOException IOException
      */
     public BulkProcessor initBulkProcessor(int bulkSize) {
         var listener = new BulkProcessor.Listener() {
@@ -154,22 +163,46 @@ public class ElasticsearchOperateRepository {
             }
         };
         return BulkProcessor.builder((request, bulkListener) -> this.client.bulkAsync(request, RequestOptions.DEFAULT, bulkListener), listener)
+                //达到刷新的条数
                 .setBulkActions(bulkSize)
+                //达到刷新的大小
                 .setBulkSize(new ByteSizeValue(10, ByteSizeUnit.MB))
+                //固定刷新的时间频率
                 .setFlushInterval(TimeValue.timeValueSeconds(5))
+                //并发线程数
                 .setConcurrentRequests(2)
+                //重试补偿策略
+                .setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
                 .build();
     }
 
-    public SearchResponse doSearch(String[] indices, SearchSourceBuilder searchSourceBuilder, int size) throws IOException {
+    /**
+     * 查询
+     * @param searchSourceBuilder searchSourceBuilder
+     * @param size 查询记录数
+     * @param indices 索引数组
+     * @return SearchResponse
+     * @throws IOException IOException
+     */
+    public SearchResponse doSearch(SearchSourceBuilder searchSourceBuilder, int size, String... indices) throws IOException {
         searchSourceBuilder.fetchSource(true);
         searchSourceBuilder.timeout(new TimeValue(500));
         searchSourceBuilder.size(size);
-//        searchSourceBuilder.searchAfter("aaa")
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.source(searchSourceBuilder);
         searchRequest.indices(indices);
         return this.client.search(searchRequest, RequestOptions.DEFAULT);
     }
 
+    /**
+     * 刷新索引
+     * @param indices 索引名称
+     * @return  RestStatus
+     * @throws IOException IOException
+     */
+    public RestStatus refreshIndex(String... indices) throws IOException {
+        RefreshRequest request = new RefreshRequest(indices);
+        RefreshResponse response = this.client.indices().refresh(request, RequestOptions.DEFAULT);
+        return response.getStatus();
+    }
 }

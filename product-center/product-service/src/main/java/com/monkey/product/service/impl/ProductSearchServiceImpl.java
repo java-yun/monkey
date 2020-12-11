@@ -47,7 +47,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         List<ProductSearch> esProducts = Lists.newArrayList();
         String afterKey = null;
         try {
-            var response = elasticsearchOperateRepository.doSearch(new String[]{BusinessConstants.PRODUCT_INDEX_ALIAS}, searchSourceBuilder, BusinessConstants.PRODUCT_ES_QUERY_SIZE);
+            var response = elasticsearchOperateRepository.doSearch(searchSourceBuilder, BusinessConstants.PRODUCT_ES_QUERY_SIZE, BusinessConstants.PRODUCT_INDEX_ALIAS);
             var searchHits = response.getHits().getHits();
             if (searchHits.length > 0) {
                 afterKey = SearchAfter.toAfterKey(searchHits[searchHits.length - 1].getSortValues());
@@ -113,7 +113,6 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         if (StringUtils.isNotEmpty(request.getAfterKey())) {
             sourceBuilder.searchAfter(SearchAfter.toSearchAfter(request.getAfterKey()));
         }
-
         return sourceBuilder;
     }
 }

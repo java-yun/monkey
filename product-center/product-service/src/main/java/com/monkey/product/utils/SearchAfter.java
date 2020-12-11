@@ -1,6 +1,7 @@
 package com.monkey.product.utils;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
 import com.monkey.common.utils.Des3Utils;
 
 /**
@@ -12,10 +13,10 @@ import com.monkey.common.utils.Des3Utils;
 public class SearchAfter {
 
     public static String toAfterKey(Object[] searchAfter) {
-        return Des3Utils.encrypt(JSONObject.toJSONString(searchAfter));
+        return Des3Utils.encrypt(JSON.toJSONString(searchAfter));
     }
 
     public static Object[] toSearchAfter(String afterKey) {
-        return JSONObject.parseObject(Des3Utils.decrypt(afterKey), Object[].class);
+        return JSON.parseObject(Des3Utils.decrypt(afterKey), Object[].class, JSON.DEFAULT_PARSER_FEATURE & ~Feature.UseBigDecimal.getMask() ,Feature.OrderedField);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Date;
 
 /**
  * 商品 es 索引实体  product_index_v1
+ * refreshInterval 设置成-1的原因  大数据量插入时，不自动刷新可以提高插入效率
  * @author jiangyun
  * @version 0.0.1
  * @date 2020/11/18 17:35
@@ -21,7 +22,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Document(indexName = "will_be_override", shards = 3, replicas = 1, refreshInterval = "-1")
+@Document(indexName = "will_be_override", shards = 1, replicas = 0, refreshInterval = "-1")
 public class ProductIndex {
 
     @Field(type = FieldType.Integer)
