@@ -137,7 +137,6 @@ public class ElasticsearchOperateRepository {
      * 获取批量操作的  BulkProcessor
      * @param bulkSize 批量大小
      * @return BulkProcessor
-     * @throws IOException IOException
      */
     public BulkProcessor initBulkProcessor(int bulkSize) {
         var listener = new BulkProcessor.Listener() {

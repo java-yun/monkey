@@ -20,7 +20,7 @@ public interface ProductSyncRpc {
      * es商品同步
      * @return Response
      */
-    @RequestMapping(value = "/product/syncProductToEs", method = RequestMethod.POST)
+    @RequestMapping(value = "/rpc/product/syncProductToEs", method = RequestMethod.POST)
     @ResponseBody
     Response<String> syncProductToEs();
 }

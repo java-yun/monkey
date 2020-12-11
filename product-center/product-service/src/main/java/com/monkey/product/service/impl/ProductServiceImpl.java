@@ -4,6 +4,7 @@ import com.monkey.common.constants.TrueFalseFlagConstants;
 import com.monkey.product.dao.ProductRepository;
 import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
+import com.monkey.product.request.ProductSubmissionRequest;
 import com.monkey.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -50,5 +51,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getOnSaleProductWithLimit(int cursor, int size) {
         return this.productRepository.getOnSaleProductWithLimit(cursor, size);
+    }
+
+    @Override
+    public void productSubmission(ProductSubmissionRequest request) {
+        //TODO
     }
 }

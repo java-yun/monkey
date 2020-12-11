@@ -1,0 +1,43 @@
+package com.monkey.product.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+/**
+ * 商品提报 request
+ * @author jiangyun
+ * @version 0.0.1
+ * @date 2020/12/11 17:47
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ProductSubmissionRequest {
+
+    private String code;
+
+    private Byte type;
+
+    private String name;
+
+    private Integer brandId;
+
+    private Integer categoryId;
+
+    private BigDecimal price;
+
+    private String mainPic;
+
+    private String detailPics;
+
+    private String brief;
+
+    private String description;
+
+    private Integer stockNum;
+}

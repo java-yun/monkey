@@ -1,7 +1,9 @@
 package com.monkey.product.service;
 
 
+import com.monkey.common.response.Response;
 import com.monkey.product.entity.Product;
+import com.monkey.product.request.ProductSubmissionRequest;
 
 import java.util.List;
 
@@ -44,4 +46,10 @@ public interface ProductService {
      * @return List<Product>
      */
     List<Product> getOnSaleProductWithLimit(int cursor, int size);
+
+    /**
+     * 商品提报
+     * @param request request
+     */
+    void productSubmission(ProductSubmissionRequest request);
 }

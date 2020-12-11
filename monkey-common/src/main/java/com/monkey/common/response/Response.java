@@ -16,6 +16,10 @@ public record Response<T>(String code, String msg, T data) {
         return new Response<>(BizCode.SUCCESS.code(), BizCode.SUCCESS.msg(), data);
     }
 
+    public static Response<String> ok() {
+        return new Response<>(BizCode.SUCCESS.code(), BizCode.SUCCESS.msg(), BizCode.SUCCESS.msg());
+    }
+
     public static <T> Response<T> error(String code, String msg) {
         return new Response<>(code, msg, null);
     }

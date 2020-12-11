@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 0.0.1
  * @date 2020/11/18 14:09
  */
-@RequestMapping(value = "/product")
+@RequestMapping(value = "/rpc/product")
 @RestController
 public class ProductSyncRpcController {
 

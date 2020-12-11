@@ -13,6 +13,8 @@ public enum AuditStatusEnum {
     SUBMISSION(Byte.valueOf("1"), "提报"),
     FIRST_TRIAL(Byte.valueOf("2"), "初审通过"),
     REVIEW_TRIAL(Byte.valueOf("3"), "复审通过"),
+    FIRST_REJECT(Byte.valueOf("4"), "初审驳回"),
+    REVIEW_REJECT(Byte.valueOf("5"), "复审驳回"),
     ;
 
     public static AuditStatusEnum fromValue(Byte status) {
@@ -24,8 +26,8 @@ public enum AuditStatusEnum {
         return null;
     }
 
-    private Byte status;
-    private String desc;
+    private final Byte status;
+    private final String desc;
 
     AuditStatusEnum(Byte status, String desc) {
         this.status = status;
