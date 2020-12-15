@@ -1,12 +1,11 @@
 package com.monkey.product;
 
+import com.monkey.common.repository.ElasticsearchOperateRepository;
 import com.monkey.product.bo.ProductIndex;
 import com.monkey.product.constants.BusinessConstants;
-import com.monkey.product.repository.ElasticsearchOperateRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 
 import java.io.IOException;
 import java.util.List;

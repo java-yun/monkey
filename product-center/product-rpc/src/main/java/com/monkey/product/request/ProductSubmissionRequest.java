@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 商品提报 request
@@ -18,8 +20,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 public class ProductSubmissionRequest {
-
-    private String code;
 
     private Byte type;
 
@@ -40,4 +40,8 @@ public class ProductSubmissionRequest {
     private String description;
 
     private Integer stockNum;
+
+    private String createUser;
+
+    private String updateUser;
 }

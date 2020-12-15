@@ -2,7 +2,6 @@ package com.monkey.product.aop;
 
 import com.monkey.common.constants.CommonConstants;
 import com.monkey.common.response.Response;
-import com.monkey.common.utils.Detect;
 import com.monkey.common.utils.GeneratorUtils;
 import com.monkey.product.exception.ProductException;
 import lombok.extern.slf4j.Slf4j;
@@ -51,9 +50,7 @@ public class RestLogAspect {
             long endTimeMillis = System.currentTimeMillis();
             String methodName = point.getSignature().getName();
             log.info("method name: {}, execute time: {} \nargs: {}, \nresult: {}", methodName, endTimeMillis-startTimeMillis, point.getArgs(), result);
-            if (Detect.isNotNullOrEmpty(MDC.get(CommonConstants.REQUEST_ID))) {
-                MDC.remove(MDC.get(CommonConstants.REQUEST_ID));
-            }
+            MDC.clear();
         }
         return result;
     }

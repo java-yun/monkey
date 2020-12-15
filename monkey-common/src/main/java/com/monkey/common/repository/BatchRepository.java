@@ -1,10 +1,10 @@
-package com.monkey.product.repository;
+package com.monkey.common.repository;
 
 import com.google.common.collect.Lists;
+import com.monkey.common.code.BizCode;
+import com.monkey.common.exception.SystemException;
+import com.monkey.common.utils.JpaAnnotationUtils;
 import com.monkey.common.utils.ObjectUtils;
-import com.monkey.product.exception.ProductErrorCode;
-import com.monkey.product.exception.ProductException;
-import com.monkey.product.utils.JpaAnnotationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -46,11 +46,11 @@ public class BatchRepository {
                 identity = JpaAnnotationUtils.getIdentityPrimaryKey(list.get(0).getClass());
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 log.error("get table structure exception : ", e);
-                throw ProductException.throwException(ProductErrorCode.PRODUCT_INIT_ERROR);
+                throw SystemException.throwException(BizCode.DATA_INSERT_ERROR);
             }
             if (Objects.isNull(tableName)) {
                 log.error("can not get table name, po name: {}", list.get(0).getClass().getName());
-                throw ProductException.throwException(ProductErrorCode.PRODUCT_INIT_ERROR);
+                throw SystemException.throwException(BizCode.DATA_INSERT_ERROR);
             }
             var builder = new StringBuilder("INSERT INTO " + tableName + "(");
             var record = records.get(0);

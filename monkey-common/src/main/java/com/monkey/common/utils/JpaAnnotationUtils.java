@@ -1,4 +1,4 @@
-package com.monkey.product.utils;
+package com.monkey.common.utils;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

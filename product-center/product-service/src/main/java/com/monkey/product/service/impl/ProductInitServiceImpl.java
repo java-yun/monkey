@@ -2,6 +2,8 @@ package com.monkey.product.service.impl;
 
 import com.google.common.collect.Lists;
 import com.monkey.common.constants.TrueFalseFlagConstants;
+import com.monkey.common.repository.BatchRepository;
+import com.monkey.common.repository.RedisRepository;
 import com.monkey.common.utils.CollectionUtils;
 import com.monkey.common.utils.NumberUtils;
 import com.monkey.product.constants.BusinessConstants;
@@ -9,8 +11,6 @@ import com.monkey.product.constants.RedisKeyConstants;
 import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
 import com.monkey.product.enums.ProductTypeEnum;
-import com.monkey.product.repository.BatchRepository;
-import com.monkey.product.repository.RedisRepository;
 import com.monkey.product.service.ProductInitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

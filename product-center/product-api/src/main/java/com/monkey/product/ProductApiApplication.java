@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
  * @author jiangyun
  */
 @Slf4j
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.monkey"})
 @EnableEurekaClient
 @EnableFeignClients
 @ServletComponentScan

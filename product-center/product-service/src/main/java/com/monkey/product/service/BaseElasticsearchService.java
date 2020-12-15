@@ -2,7 +2,7 @@ package com.monkey.product.service;
 
 import com.monkey.common.code.BizCode;
 import com.monkey.common.exception.SystemException;
-import com.monkey.product.repository.ElasticsearchOperateRepository;
+import com.monkey.common.repository.ElasticsearchOperateRepository;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

@@ -38,11 +38,6 @@
             </dependency>
             <dependency>
                 <groupId>com.monkey</groupId>
-                <artifactId>product-utils</artifactId>
-                <version>${product.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.monkey</groupId>
                 <artifactId>product-service</artifactId>
                 <version>${product.version}</version>
             </dependency>

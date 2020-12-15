@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.monkey</groupId>
-            <artifactId>product-utils</artifactId>
+            <artifactId>monkey-common</artifactId>
         </dependency>
     </dependencies>
 

@@ -16,7 +16,7 @@ public class ProductThreadPoolManager extends ThreadPoolManager {
 
     private static final Object LOCK = new Object();
 
-    private static final String THREAD_POOL_NAME = "com.yun.product";
+    private static final String THREAD_POOL_NAME = "com.monkey.product";
 
     private ProductThreadPoolManager() {
         super();

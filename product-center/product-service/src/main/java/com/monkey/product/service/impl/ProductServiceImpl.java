@@ -1,14 +1,14 @@
 package com.monkey.product.service.impl;
 
 import com.monkey.common.constants.TrueFalseFlagConstants;
+import com.monkey.common.repository.RedisRepository;
 import com.monkey.product.dao.ProductRepository;
 import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
 import com.monkey.product.request.ProductSubmissionRequest;
 import com.monkey.product.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import com.monkey.product.utils.ProductParamCheckUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +24,11 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    private final RedisRepository redisRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository, RedisRepository redisRepository) {
         this.productRepository = productRepository;
+        this.redisRepository = redisRepository;
     }
 
     @Override
@@ -55,6 +58,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void productSubmission(ProductSubmissionRequest request) {
+        new ProductParamCheckUtils.Builder().productType(request.getType()).build().checkParam();
+        var product = Product.builder().build();
+        BeanUtils.copyProperties(request, product);
+        product.setAuditStatus(AuditStatusEnum.SUBMISSION.getStatus());
         //TODO
     }
 }

@@ -1,6 +1,5 @@
-package com.monkey.product.repository;
+package com.monkey.common.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +14,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisRepository {
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
+
+    public RedisRepository(StringRedisTemplate stringRedisTemplate) {
+        this.stringRedisTemplate = stringRedisTemplate;
+    }
 
     /**
      * 字符串存储
@@ -99,7 +101,7 @@ public class RedisRepository {
      * @param value time
      * @return true 设值成功， false 设值失败
      */
-    public boolean setNx(String key, String value) {
+    public Boolean setNx(String key, String value) {
         return this.stringRedisTemplate.opsForValue().setIfAbsent(key, value);
     }
 }

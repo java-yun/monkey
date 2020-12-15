@@ -25,4 +25,13 @@ public class MdcCopyHelper {
         }
     }
 
+    public void clear(Object... any) {
+        MDC.clear();
+    }
+
+    public boolean clearAndFail() {
+        MDC.clear();
+        return false;
+    }
+
 }

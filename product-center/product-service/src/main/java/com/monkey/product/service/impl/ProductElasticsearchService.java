@@ -1,13 +1,13 @@
 package com.monkey.product.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.monkey.common.repository.ElasticsearchOperateRepository;
 import com.monkey.common.utils.NumberUtils;
 import com.monkey.product.bo.ProductIndex;
 import com.monkey.product.constants.BusinessConstants;
 import com.monkey.product.entity.Product;
 import com.monkey.product.exception.ProductErrorCode;
 import com.monkey.product.exception.ProductException;
-import com.monkey.product.repository.ElasticsearchOperateRepository;
 import com.monkey.product.service.BaseElasticsearchService;
 import com.monkey.product.service.ProductService;
 import lombok.extern.slf4j.Slf4j;

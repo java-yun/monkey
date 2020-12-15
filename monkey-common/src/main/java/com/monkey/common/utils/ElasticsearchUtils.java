@@ -1,9 +1,8 @@
-package com.monkey.product.utils;
+package com.monkey.common.utils;
 
 import com.google.common.collect.Maps;
-import com.monkey.common.utils.StringUtils;
-import com.monkey.product.exception.ProductErrorCode;
-import com.monkey.product.exception.ProductException;
+import com.monkey.common.code.BizCode;
+import com.monkey.common.exception.SystemException;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.settings.Settings;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
@@ -76,7 +75,7 @@ public class ElasticsearchUtils {
             return mappings;
         } else {
             log.error("index mappings create error, index clazz : {}", clazz.getName());
-            throw ProductException.throwException(ProductErrorCode.INDEX_CREATE_ERROR);
+            throw SystemException.throwException(BizCode.INDEX_CREATE_ERROR);
         }
     }
 

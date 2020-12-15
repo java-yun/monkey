@@ -1,9 +1,9 @@
-package com.monkey.product.repository;
+package com.monkey.common.repository;
 
 import com.google.common.collect.Lists;
-import com.monkey.product.exception.ProductErrorCode;
-import com.monkey.product.exception.ProductException;
-import com.monkey.product.utils.ElasticsearchUtils;
+import com.monkey.common.code.BizCode;
+import com.monkey.common.exception.SystemException;
+import com.monkey.common.utils.ElasticsearchUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -70,7 +70,7 @@ public class ElasticsearchOperateRepository {
             log.info("index create success, indexName:{}, index clazz: {}", indexName, clazz.getName());
         } catch (NoSuchFieldException | IllegalAccessException | IOException e) {
             log.error("index create error, indexName:{}, index class :{}", indexName, clazz.getName(), e);
-            throw ProductException.throwException(ProductErrorCode.INDEX_CREATE_ERROR);
+            throw SystemException.throwException(BizCode.INDEX_CREATE_ERROR);
         }
 
 
