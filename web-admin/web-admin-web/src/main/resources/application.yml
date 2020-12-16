@@ -1,0 +1,70 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: web-admin
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/monkey_web_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 10                   # 最小空闲连接数量
+      idle-timeout: 30000              # 空闲连接存活最大时间，默认600000（10分钟）
+      maximum-pool-size: 30             # 连接池最大连接数
+      auto-commit: true
+      pool-name: HikariCP
+      max-lifetime: 900000             # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+      connection-timeout: 10000         # 数据库连接超时时间,默认30秒，即30000
+      connection-test-query: SELECT 1   # 心跳
+      validation-timeout: 1000
+
+  # redis
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
+    timeout: 5000
+
+  jpa:
+    show-sql: true
+
+  profiles:
+    active: @spring.profiles.active@
+
+eureka:
+  client:
+    serviceUrl: #注册中心的注册地址
+      defaultZone: http://localhost:8761/eureka/
+
+#开启熔断超时，默认开启   设置超时时间 默认1000毫秒
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000
+
+#开启熔断机制
+feign:
+  hystrix:
+    enabled: true
+
+#设置ribbon连接和读取的超时时间
+ribbon:
+  ConnectTimeout: 10000
+  ReadTimeout: 10000
+  ServerListRefreshInterval: 2000
+
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml

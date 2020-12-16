@@ -48,6 +48,6 @@ CREATE TABLE `yun_product`  (
   INDEX `idx_product_name`(`name`) USING BTREE,
   INDEX `idx_product_on_sale`(`on_sale_time`) USING BTREE,
   INDEX `idx_product_off_sale`(`off_sale_time`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -11,11 +11,12 @@
         <relativePath/>
     </parent>
 
-    <artifactId>product-center</artifactId>
+    <artifactId>web-admin</artifactId>
     <packaging>pom</packaging>
 
     <properties>
         <product.version>1.0.0-SNAPSHOT</product.version>
+        <web-admin.version>1.0.0-SNAPSHOT</web-admin.version>
         <monkey-common.verssion>1.0.0-SNAPSHOT</monkey-common.verssion>
     </properties>
 
@@ -30,18 +31,18 @@
             <!-- 内部系统 -->
             <dependency>
                 <groupId>com.monkey</groupId>
-                <artifactId>product-dao</artifactId>
-                <version>${product.version}</version>
+                <artifactId>web-admin-dao</artifactId>
+                <version>${web-admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.monkey</groupId>
-                <artifactId>product-rpc</artifactId>
-                <version>${product.version}</version>
+                <artifactId>web-admin-rpc</artifactId>
+                <version>${web-admin.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.monkey</groupId>
-                <artifactId>product-service</artifactId>
-                <version>${product.version}</version>
+                <artifactId>web-admin-service</artifactId>
+                <version>${web-admin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -73,11 +74,10 @@
     </build>
 
     <modules>
-        <module>product-dao</module>
-        <module>product-rpc</module>
-        <module>product-service</module>
-        <module>product-api</module>
+        <module>web-admin-dao</module>
+        <module>web-admin-rpc</module>
+        <module>web-admin-service</module>
+        <module>web-admin-web</module>
     </modules>
-
 
 </project>

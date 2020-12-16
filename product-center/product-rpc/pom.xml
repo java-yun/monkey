@@ -8,10 +8,10 @@
         <artifactId>product-center</artifactId>
         <groupId>com.monkey</groupId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <artifactId>product-rpc</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
