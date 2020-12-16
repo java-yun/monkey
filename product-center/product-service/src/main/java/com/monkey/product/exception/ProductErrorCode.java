@@ -12,12 +12,12 @@ import com.monkey.common.code.MonkeyCodePrefix;
 public class ProductErrorCode extends BizCode {
 
     public static final ProductErrorCode TEST = new ProductErrorCode("000", "test");
-    public static final ProductErrorCode PRODUCT_INIT_ERROR = new ProductErrorCode("001", "商品初始化异常");
-    public static final ProductErrorCode INDEX_CREATE_ERROR = new ProductErrorCode("002", "es索引创建异常");
-    public static final ProductErrorCode PRODUCT_SEARCH_ERROR = new ProductErrorCode("003", "es查询异常");
-    public static final ProductErrorCode BULK_OPERATOR_ERROR = new ProductErrorCode("004", "es批量操作异常");
-    public static final ProductErrorCode INDEX_REFRESH_ERROR = new ProductErrorCode("005", "索引刷新异常");
-    public static final ProductErrorCode PRODUCT_TYPE_ERROR = new ProductErrorCode("006", "商品类型错误");
+    public static final ProductErrorCode PRODUCT_INIT_ERROR = new ProductErrorCode("001", "product init exception");
+    public static final ProductErrorCode INDEX_CREATE_ERROR = new ProductErrorCode("002", "index create exception");
+    public static final ProductErrorCode PRODUCT_SEARCH_ERROR = new ProductErrorCode("003", "elasticsearch query exception");
+    public static final ProductErrorCode BULK_OPERATOR_ERROR = new ProductErrorCode("004", "bulk operator exception");
+    public static final ProductErrorCode INDEX_REFRESH_ERROR = new ProductErrorCode("005", "index refresh exception");
+    public static final ProductErrorCode PRODUCT_TYPE_ERROR = new ProductErrorCode("006", "product type error");
 
     private ProductErrorCode(String code, String msg, CodePrefix codePrefix) {
         super(code, msg, codePrefix);

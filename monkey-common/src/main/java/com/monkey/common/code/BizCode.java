@@ -18,16 +18,16 @@ public class BizCode implements Code {
     public static final BizCode NOT_FOUND;
 
     static {
-        SUCCESS = new BizCode("000", "成功", CodePrefix.SUCCESS);
-        ERROR = new BizCode("999", "系统异常", CodePrefix.ERROR);
-        RPC_TIMEOUT = new BizCode("998", "RPC调用超时", CodePrefix.ERROR);
-        DATA_SYNC_ERROR = new BizCode("997", "数据同步异常", CodePrefix.ERROR);
-        DATA_INSERT_ERROR = new BizCode("996", "数据插入异常", CodePrefix.ERROR);
-        INDEX_CREATE_ERROR = new BizCode("995", "索引创建异常", CodePrefix.ERROR);
+        SUCCESS = new BizCode("000", "success", CodePrefix.SUCCESS);
+        ERROR = new BizCode("999", "system exception", CodePrefix.ERROR);
+        RPC_TIMEOUT = new BizCode("998", "RPC invoke timeout", CodePrefix.ERROR);
+        DATA_SYNC_ERROR = new BizCode("997", "data sync exception", CodePrefix.ERROR);
+        DATA_INSERT_ERROR = new BizCode("996", "data sync exception", CodePrefix.ERROR);
+        INDEX_CREATE_ERROR = new BizCode("995", "index create exception", CodePrefix.ERROR);
 
-        DUPLICATE_OPERATION = new BizCode("001", "RPC调用超时", CodePrefix.COMMON);
-        RESOURCE_EXISTS = new BizCode("002", "资源已存在", CodePrefix.COMMON);
-        NOT_FOUND = new BizCode("003", "资源不存在", CodePrefix.COMMON);
+        DUPLICATE_OPERATION = new BizCode("001", "duplicate operation", CodePrefix.COMMON);
+        RESOURCE_EXISTS = new BizCode("002", "resources already exists", CodePrefix.COMMON);
+        NOT_FOUND = new BizCode("003", "resources not found", CodePrefix.COMMON);
 
     }
 

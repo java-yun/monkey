@@ -1,16 +1,18 @@
 package com.monkey.product.service.impl;
 
 import com.monkey.common.constants.TrueFalseFlagConstants;
-import com.monkey.common.repository.RedisRepository;
 import com.monkey.product.dao.ProductRepository;
 import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
+import com.monkey.product.repository.ProductRedisRepository;
 import com.monkey.product.request.ProductSubmissionRequest;
 import com.monkey.product.service.ProductService;
 import com.monkey.product.utils.ProductParamCheckUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,11 +26,11 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
-    private final RedisRepository redisRepository;
+    private final ProductRedisRepository productRedisRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository, RedisRepository redisRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductRedisRepository productRedisRepository) {
         this.productRepository = productRepository;
-        this.redisRepository = redisRepository;
+        this.productRedisRepository = productRedisRepository;
     }
 
     @Override
@@ -57,11 +59,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void productSubmission(ProductSubmissionRequest request) {
         new ProductParamCheckUtils.Builder().productType(request.getType()).build().checkParam();
+        var date = new Date();
         var product = Product.builder().build();
         BeanUtils.copyProperties(request, product);
         product.setAuditStatus(AuditStatusEnum.SUBMISSION.getStatus());
-        //TODO
+        product.setCode(productRedisRepository.getProductCode());
+        product.setIsOnSale(TrueFalseFlagConstants.FALSE);
+        product.setCreateTime(date);
+        product.setUpdateTime(date);
+        this.productRepository.save(product);
     }
 }

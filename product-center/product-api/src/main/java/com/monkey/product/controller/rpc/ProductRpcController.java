@@ -4,6 +4,7 @@ import com.monkey.common.response.Response;
 import com.monkey.product.request.ProductSubmissionRequest;
 import com.monkey.product.service.ProductService;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,7 @@ public class ProductRpcController {
      * @return Response
      */
     @RequestMapping(value = "/submission", method = RequestMethod.POST)
-    public Response<String> productSubmission(ProductSubmissionRequest request) {
+    public Response<String> productSubmission(@RequestBody ProductSubmissionRequest request) {
         this.productService.productSubmission(request);
         return Response.ok();
     }

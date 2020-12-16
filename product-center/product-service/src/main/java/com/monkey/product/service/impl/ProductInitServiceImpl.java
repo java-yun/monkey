@@ -3,17 +3,15 @@ package com.monkey.product.service.impl;
 import com.google.common.collect.Lists;
 import com.monkey.common.constants.TrueFalseFlagConstants;
 import com.monkey.common.repository.BatchRepository;
-import com.monkey.common.repository.RedisRepository;
 import com.monkey.common.utils.CollectionUtils;
 import com.monkey.common.utils.NumberUtils;
 import com.monkey.product.constants.BusinessConstants;
-import com.monkey.product.constants.RedisKeyConstants;
 import com.monkey.product.entity.Product;
 import com.monkey.product.enums.AuditStatusEnum;
 import com.monkey.product.enums.ProductTypeEnum;
+import com.monkey.product.repository.ProductRedisRepository;
 import com.monkey.product.service.ProductInitService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -48,11 +46,14 @@ public class ProductInitServiceImpl implements ProductInitService {
 
     private static final int FOR_LENGTH = 50;
 
-    @Autowired
-    private BatchRepository batchRepository;
+    private final BatchRepository batchRepository;
 
-    @Autowired
-    private RedisRepository redisRepository;
+    private final ProductRedisRepository productRedisRepository;
+
+    public ProductInitServiceImpl(BatchRepository batchRepository, ProductRedisRepository productRedisRepository) {
+        this.batchRepository = batchRepository;
+        this.productRedisRepository = productRedisRepository;
+    }
 
     @Override
     public void init() {
@@ -63,7 +64,7 @@ public class ProductInitServiceImpl implements ProductInitService {
                 var auditStatus = CollectionUtils.getListRandomElement(AUDIT_STATUS);
                 var isOnSale = AuditStatusEnum.REVIEW_TRIAL == AuditStatusEnum.fromValue(auditStatus) ? TrueFalseFlagConstants.TRUE : TrueFalseFlagConstants.FALSE;
                 var date = new Date();
-                var product = Product.builder().code(this.getProductCode())
+                var product = Product.builder().code(this.productRedisRepository.getProductCode())
                         .type(CollectionUtils.getListRandomElement(PRODUCT_TYPE))
                         .name(name)
                         .brandId(CollectionUtils.getListRandomElement(BRAND_ID))
@@ -91,14 +92,4 @@ public class ProductInitServiceImpl implements ProductInitService {
         log.info("{} insert data to db success......", Thread.currentThread().getName());
     }
 
-    /**
-     * 获取 商品编码
-     * @return String
-     */
-    private String getProductCode() {
-        if (!this.redisRepository.setNx(RedisKeyConstants.PRODUCT_CODE, BusinessConstants.START_PRODUCT_CODE)) {
-            return String.valueOf(redisRepository.incrementOne(RedisKeyConstants.PRODUCT_CODE));
-        }
-        return BusinessConstants.START_PRODUCT_CODE;
-    }
 }

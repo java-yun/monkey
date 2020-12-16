@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @version 0.0.1
  * @date 2020/11/18 13:53
  */
-@FeignClient(value = "product-center", fallback = ProductSyncRpcFallback.class)
+@FeignClient(value = "product-center", contextId = "product-sync", fallback = ProductSyncRpcFallback.class)
 public interface ProductSyncRpc {
 
     /**
