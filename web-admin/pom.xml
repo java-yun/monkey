@@ -8,7 +8,6 @@
         <artifactId>monkey-parent</artifactId>
         <groupId>com.monkey</groupId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath/>
     </parent>
 
     <artifactId>web-admin</artifactId>
@@ -17,7 +16,7 @@
     <properties>
         <product.version>1.0.0-SNAPSHOT</product.version>
         <web-admin.version>1.0.0-SNAPSHOT</web-admin.version>
-        <monkey-common.verssion>1.0.0-SNAPSHOT</monkey-common.verssion>
+        <monkey-common.version>1.0.0-SNAPSHOT</monkey-common.version>
     </properties>
 
     <dependencyManagement>
@@ -25,7 +24,7 @@
             <dependency>
                 <groupId>com.monkey</groupId>
                 <artifactId>monkey-common</artifactId>
-                <version>${monkey-common.verssion}</version>
+                <version>${monkey-common.version}</version>
             </dependency>
 
             <!-- 内部系统 -->
@@ -43,6 +42,12 @@
                 <groupId>com.monkey</groupId>
                 <artifactId>web-admin-service</artifactId>
                 <version>${web-admin.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.monkey</groupId>
+                <artifactId>product-rpc</artifactId>
+                <version>${product.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

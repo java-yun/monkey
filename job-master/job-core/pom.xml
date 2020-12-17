@@ -5,6 +5,7 @@
 		<groupId>com.monkey</groupId>
 		<artifactId>job-master</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
+		<relativePath/>
 	</parent>
 	<artifactId>job-core</artifactId>
 	<packaging>jar</packaging>
