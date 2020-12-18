@@ -12,6 +12,10 @@
 
     <artifactId>web-admin-service</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring-boot-web-starter</artifactId>
+        </dependency>
         <!-- 内部依赖 -->
         <dependency>
             <groupId>com.monkey</groupId>

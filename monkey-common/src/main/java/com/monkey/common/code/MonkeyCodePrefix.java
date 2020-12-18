@@ -20,6 +20,10 @@ public class MonkeyCodePrefix extends CodePrefix {
      * 商品响应状态码前缀
      */
     public static final MonkeyCodePrefix PRODUCT = new MonkeyCodePrefix("400");
+    /**
+     * web响应状态码前缀
+     */
+    public static final MonkeyCodePrefix WEB = new MonkeyCodePrefix("500");
 
     public MonkeyCodePrefix(String code) {
         super(code);

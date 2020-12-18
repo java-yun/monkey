@@ -8,8 +8,8 @@ package com.monkey.product.constants;
  */
 public final class RedisKeyConstants {
 
-    private static final String PRODUCT_PREFIX = "yun:product:";
+    private static final String PRODUCT_PREFIX = "monkey:product:";
 
-    public static final String PRODUCT_CODE= PRODUCT_PREFIX + "code";
+    public static final String PRODUCT_CODE= PRODUCT_PREFIX + "product_code";
 
 }

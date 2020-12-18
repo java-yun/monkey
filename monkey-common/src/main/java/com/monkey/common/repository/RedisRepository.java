@@ -104,4 +104,13 @@ public class RedisRepository {
     public Boolean setNx(String key, String value) {
         return this.stringRedisTemplate.opsForValue().setIfAbsent(key, value);
     }
+
+    /**
+     * 删除 key
+     * @param key key
+     * @return true成功  false失败
+     */
+    public Boolean remove(final String key) {
+        return this.stringRedisTemplate.delete(key);
+    }
 }
