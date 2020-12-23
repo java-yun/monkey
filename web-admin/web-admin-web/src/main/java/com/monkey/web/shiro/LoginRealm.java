@@ -2,10 +2,10 @@ package com.monkey.web.shiro;
 
 
 import com.monkey.common.utils.IsValid;
-import com.monkey.web.dao.SysUserRepository;
 import com.monkey.web.bo.CurrentPermitButton;
 import com.monkey.web.bo.CurrentRole;
 import com.monkey.web.bo.CurrentUser;
+import com.monkey.web.dao.SysUserRepository;
 import com.monkey.web.service.sys.SysRoleUserMenuService;
 import com.monkey.web.utils.CmsSysUserUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,7 +71,7 @@ public class LoginRealm extends AuthorizingRealm {
         //封装角色信息
         var roles =  sysRoleUserMenuService.getRolesByUsername(username);
         //将 SysRole 转换 CurrentRole
-        List<CurrentRole> currentRoles= roles.stream().filter(Objects::nonNull).map(role -> {
+        var currentRoles= roles.stream().filter(Objects::nonNull).map(role -> {
             var currentRole = new CurrentRole();
             BeanUtils.copyProperties(role, currentRole);
             return currentRole;
@@ -81,7 +80,7 @@ public class LoginRealm extends AuthorizingRealm {
         //封装按钮权限列表
         var buttonsByUserNames = sysRoleUserMenuService.getButtonsByUsername(username);
         //将 SysMenu 转换成 CurrentPermitButton
-        List<CurrentPermitButton> permitButtons = buttonsByUserNames.stream().filter(Objects::nonNull).map(button -> {
+        var permitButtons = buttonsByUserNames.stream().filter(Objects::nonNull).map(button -> {
             var currentPermitButton = new CurrentPermitButton();
             BeanUtils.copyProperties(button, currentPermitButton);
             return currentPermitButton;
