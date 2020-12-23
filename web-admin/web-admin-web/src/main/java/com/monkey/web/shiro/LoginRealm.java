@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
  * 登陆认证器
  * @author jiangyun
  */
-@Service
 @Slf4j
 public class LoginRealm extends AuthorizingRealm {
 

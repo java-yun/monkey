@@ -16,7 +16,7 @@ import java.util.List;
 public interface SysMenuRepository extends JpaRepository<SysMenu, Integer> {
 
     @Query(value = """
-        SELECT m.id AS id, m.permission AS permission, m.CODE AS CODE, m.p_code AS pCode, m.NAME AS NAME
+        SELECT m.id AS id, m.permission AS permission, m.code AS code, m.p_code AS pCode, m.name AS name
         FROM sys_role_menu rolem, sys_menu m
         WHERE rolem.menu_id = m.id AND rolem.role_id IN (?1)
     """, nativeQuery = true)

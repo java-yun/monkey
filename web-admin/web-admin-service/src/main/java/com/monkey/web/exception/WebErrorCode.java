@@ -12,12 +12,12 @@ import com.monkey.common.code.MonkeyCodePrefix;
 public class WebErrorCode extends BizCode {
 
     public static final WebErrorCode TEST = new WebErrorCode("000", "test");
-    public static final WebErrorCode SYS_USER_NOT_EXITS = new WebErrorCode("001", "sys user not exits");
-    public static final WebErrorCode USER_NAME_IS_EMPTY = new WebErrorCode("002", "user name is empty");
-    public static final WebErrorCode PHONE_NOT_BIND = new WebErrorCode("003", "phone not bind");
-    public static final WebErrorCode NEW_PWD_EQUALS_OLD = new WebErrorCode("004", "new password equals old password");
-    public static final WebErrorCode OLD_PWD_ERROR = new WebErrorCode("005", "old password is wrong");
-    public static final WebErrorCode PARAM_ERROR = new WebErrorCode("006", "param error");
+    public static final WebErrorCode SYS_USER_NOT_EXITS = new WebErrorCode("001", "用户不存在");
+    public static final WebErrorCode USER_NAME_IS_EMPTY = new WebErrorCode("002", "用户名为空");
+    public static final WebErrorCode PHONE_NOT_BIND = new WebErrorCode("003", "手机号未绑定");
+    public static final WebErrorCode NEW_PWD_EQUALS_OLD = new WebErrorCode("004", "新老密码相同");
+    public static final WebErrorCode OLD_PWD_ERROR = new WebErrorCode("005", "老密码错误");
+    public static final WebErrorCode PARAM_ERROR = new WebErrorCode("006", "参数异常");
 
     private WebErrorCode(String code, String msg, CodePrefix codePrefix) {
         super(code, msg, codePrefix);

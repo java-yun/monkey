@@ -1,8 +1,8 @@
 layui.config({
 	base : '../../plugin/js/'
 }).use(['layer', 'form'], function () {
-	var $ = layui.jquery, 
-	layerTips = parent.layer === undefined ? layui.layer : parent.layer, // 获取父窗口的layer对象
+	var $ = layui.jquery,
+// 获取父窗口的layer对象
     layer = layui.layer, // 获取当前窗口的layer对象
     form = layui.form;
 	
@@ -22,7 +22,7 @@ layui.config({
             dataType: "json", 
             traditional: true,
             success: function (data) {
-            	if (data.code == 0) {
+            	if (data.code === 0) {
 					var index = parent.layer.getFrameIndex(window.name);
 					window.top.layer.msg(data.msg, {
 						icon : 6

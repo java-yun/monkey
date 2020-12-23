@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>绯石之心</title>
@@ -18,7 +18,7 @@
 <body class="login-bg">
 
 <div class="login">
-    <div class="message">绯石之心数据后台</div>
+    <div class="message">monkey数据后台</div>
     <div id="darkbannerwrap"></div>
 
     <form method="post" action="${re.contextPath}/doLogin" class="layui-form">
@@ -45,18 +45,18 @@
 
 
 <script>
-    var layer;
+    let layer;
     $(function () {
         layui.use(['form', 'layer'], function () {
-            var form = layui.form;
+            const form = layui.form;
             form.verify({
                 username: function (v) {
-                    if (v.trim() == '') {
+                    if (v.trim() === '') {
                         return "用户名不能为空";
                     }
                 }
                 , password: function (v) {
-                    if (v.trim() == '') {
+                    if (v.trim() === '') {
                         return "密码不能为空";
                     }
                 }
@@ -64,16 +64,14 @@
             form.render();
         });
         layer = layui.layer;
-        var msg = '${message}';
-        if (msg.trim() != "") {
+        const msg = '${message}';
+        if (msg.trim() !== "") {
             layer.msg(msg, {icon: 5, anim: 6, offset: 't'});
         }
-
     })
 
     // 发送验证码
     $("#sendSms").click(function () {
-        var _this = $(this);
         $.ajax({
             url: 'sendSms'
             , data: {
@@ -81,7 +79,7 @@
             }
             , type: 'post'
             , success: function (data) {
-                if (data.code == '000000') {
+                if (data.code === '000000') {
                     window.top.layer.msg(data.msg, {icon: 1});
                 } else {
                     window.top.layer.msg(data.msg, {icon: 2});
@@ -91,7 +89,7 @@
     })
 
 
-    if (window != top)
+    if (window !== top)
         top.location.href = location.href;
 </script>
 

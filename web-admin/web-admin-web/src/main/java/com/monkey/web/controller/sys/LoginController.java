@@ -1,20 +1,20 @@
 package com.monkey.web.controller.sys;
 
+import com.monkey.common.response.Response;
 import com.monkey.web.bo.CurrentUser;
 import com.monkey.web.exception.WebException;
 import com.monkey.web.service.sys.LoginService;
 import com.monkey.web.utils.CmsSysUserUtil;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * cms 登录 controller
@@ -46,9 +46,9 @@ public class LoginController {
         boolean flag = sub.isAuthenticated() || isRemembered;
         if (flag) {
             var user = CmsSysUserUtil.getCurrentUser();
-            return isDefaultPwd(user) ? "redirect:/password/modify?userId=" + user.getId() : "/system/main";
+            return isDefaultPwd(user) ? "redirect:/password/modify?userId=" + user.getId() : "system/main";
         }
-        return "/login";
+        return "system/login";
     }
 
     private boolean isDefaultPwd(CurrentUser user) {
@@ -65,11 +65,10 @@ public class LoginController {
      */
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
     public String doLogin(String username,String password,String smsCode, Model model){
-        String view = "/login";
+        String view = "system/login";
         try {
             loginService.doLogin(username, password, smsCode);
-            var subject = CmsSysUserUtil.getSubject();
-            view = isDefaultPwd(CmsSysUserUtil.getCurrentUser()) ? "redirect:/password/modify?userId=" + CmsSysUserUtil.getCurrentUser().getId() : "/system/main";
+            view = isDefaultPwd(CmsSysUserUtil.getCurrentUser()) ? "redirect:/password/modify?userId=" + CmsSysUserUtil.getCurrentUser().getId() : "system/main";
         } catch (WebException e) {
             model.addAttribute(e.getMessage());
         } catch (UnknownAccountException | IncorrectCredentialsException e) {
@@ -78,5 +77,17 @@ public class LoginController {
             model.addAttribute("登录失败多次，账户锁定10分钟");
         }
         return view;
+    }
+
+    /**
+     * 登陆发送验证码
+     * @param username username
+     * @return Response<String>
+     */
+    @RequestMapping(value = "/sendSms", method = RequestMethod.POST)
+    @ResponseBody
+    public Response<String> sendMsg(String username){
+        loginService.sendMsg(username);
+        return Response.ok();
     }
 }

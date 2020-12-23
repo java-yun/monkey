@@ -113,4 +113,13 @@ public class RedisRepository {
     public Boolean remove(final String key) {
         return this.stringRedisTemplate.delete(key);
     }
+
+    /**
+     * 获取过期时间
+     * @param key key
+     * @return long
+     */
+    public Long getExpire(String key) {
+        return this.stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+    }
 }

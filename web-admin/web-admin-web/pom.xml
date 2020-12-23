@@ -37,6 +37,15 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.mingsoft</groupId>
+            <artifactId>shiro-freemarker-tags</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.monkey</groupId>
             <artifactId>web-admin-service</artifactId>
         </dependency>
@@ -77,6 +86,8 @@
                     <!--suppress UnresolvedMavenProperty -->
                     <include>application-${spring.profile.active}.yml</include>
                     <include>**/*.xml</include>
+                    <include>ftl/**</include>
+                    <include>plugin/**</include>
                 </includes>
             </resource>
         </resources>

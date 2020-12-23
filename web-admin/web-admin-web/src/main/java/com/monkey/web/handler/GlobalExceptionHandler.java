@@ -1,4 +1,4 @@
-package com.monkey.product.handler;
+package com.monkey.web.handler;
 
 import com.monkey.common.code.BizCode;
 import com.monkey.common.exception.SystemException;

@@ -1,7 +1,12 @@
 package com.monkey.web.service.sys.impl;
 
+import com.monkey.common.enums.ModuleEnum;
+import com.monkey.common.enums.MsgBizTypeEnum;
+import com.monkey.common.service.MsgCodeService;
+import com.monkey.common.utils.CommonParamCheckUtils;
 import com.monkey.common.utils.IsValid;
 import com.monkey.web.dao.SysUserRepository;
+import com.monkey.web.entity.SysUser;
 import com.monkey.web.exception.WebErrorCode;
 import com.monkey.web.exception.WebException;
 import com.monkey.web.service.sys.LoginService;
@@ -27,22 +32,41 @@ public class LoginServiceImpl implements LoginService {
 
     private final SysUserRepository userRepository;
 
-    public LoginServiceImpl(SysUserRepository userRepository) {
+    private final MsgCodeService msgCodeService;
+
+    public LoginServiceImpl(SysUserRepository userRepository, MsgCodeService msgCodeService) {
         this.userRepository = userRepository;
+        this.msgCodeService = msgCodeService;
     }
 
     @Override
     public void doLogin(String username, String password, String smsCode) {
+        var sysUser = validateUser(username);
+        if (!isDebug) {
+            this.msgCodeService.checkMsg(sysUser.getMobile(), smsCode, ModuleEnum.CMS_WEB.getModule(), MsgBizTypeEnum.CMS_LOGIN.getType());
+        }
+        var subject = CmsSysUserUtil.getSubject();
+        log.info("===> request password is:{}", password);
+        subject.login(new UsernamePasswordToken(username.trim(), password));
+    }
+
+    private SysUser validateUser(String username) {
         var sysUser = this.userRepository.findByUsernameAndDelFlag(username, Byte.parseByte(IsValid.valid.getValue()));
         if (Objects.isNull(sysUser)) {
             log.error("user not exists, username:{}", username);
             throw WebException.throwException(WebErrorCode.SYS_USER_NOT_EXITS);
         }
-        if (!isDebug) {
-            //校验短信验证码 TODO
+        return sysUser;
+    }
+
+    @Override
+    public void sendMsg(String username) {
+        if (isDebug) {
+            return;
         }
-        var subject = CmsSysUserUtil.getSubject();
-        log.info("===> request password is:{}", password);
-        subject.login(new UsernamePasswordToken(username.trim(), password));
+        var sysUser = this.validateUser(username);
+        new CommonParamCheckUtils.Builder().phoneNum(sysUser.getMobile()).build().checkParam();
+        //发送验证码
+        this.msgCodeService.sendAliyunMessage(sysUser.getMobile(), ModuleEnum.CMS_WEB.getModule(), MsgBizTypeEnum.CMS_LOGIN.getType());
     }
 }

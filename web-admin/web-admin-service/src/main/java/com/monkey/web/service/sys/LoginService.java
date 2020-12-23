@@ -15,4 +15,10 @@ public interface LoginService {
      * @param smsCode smsCode
      */
     void doLogin(String username, String password, String smsCode);
+
+    /**
+     * 发送登录短信验证码
+     * @param username username
+     */
+    void sendMsg(String username);
 }

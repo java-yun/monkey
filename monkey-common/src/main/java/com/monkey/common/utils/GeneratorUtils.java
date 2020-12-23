@@ -17,4 +17,12 @@ public class GeneratorUtils {
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
     }
+
+    /**
+     * 6位短信验证码
+     * @return String
+     */
+    public static String generate6Length(){
+        return (int)((Math.random()*9+1)*100000) + "";
+    }
 }
