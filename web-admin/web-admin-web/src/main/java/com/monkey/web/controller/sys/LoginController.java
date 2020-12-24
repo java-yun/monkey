@@ -4,6 +4,8 @@ import com.monkey.common.response.Response;
 import com.monkey.web.bo.CurrentUser;
 import com.monkey.web.exception.WebException;
 import com.monkey.web.service.sys.LoginService;
+import com.monkey.web.service.sys.SysMenuService;
+import com.monkey.web.service.sys.SysUserService;
 import com.monkey.web.utils.CmsSysUserUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -25,13 +27,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class LoginController {
 
-    @Value("${default.login.password:123456}")
+    @Value("${monkey.web.default-password:123456}")
     private String defaultPassword;
 
     private final LoginService loginService;
 
-    public LoginController(LoginService loginService) {
+    private final SysUserService sysUserService;
+
+    private final SysMenuService sysMenuService;
+
+    public LoginController(LoginService loginService, SysUserService sysUserService, SysMenuService sysMenuService) {
         this.loginService = loginService;
+        this.sysUserService = sysUserService;
+        this.sysMenuService = sysMenuService;
     }
 
 
@@ -68,7 +76,7 @@ public class LoginController {
         String view = "system/login";
         try {
             loginService.doLogin(username, password, smsCode);
-            view = isDefaultPwd(CmsSysUserUtil.getCurrentUser()) ? "redirect:/password/modify?userId=" + CmsSysUserUtil.getCurrentUser().getId() : "system/main";
+            view = isDefaultPwd(CmsSysUserUtil.getCurrentUser()) ? "redirect:/password/modify?userId=" + CmsSysUserUtil.getCurrentUser().getId() : "redirect:/main";
         } catch (WebException e) {
             model.addAttribute(e.getMessage());
         } catch (UnknownAccountException | IncorrectCredentialsException e) {
@@ -88,6 +96,56 @@ public class LoginController {
     @ResponseBody
     public Response<String> sendMsg(String username){
         loginService.sendMsg(username);
+        return Response.ok();
+    }
+
+    /**
+     * 登陆成功 跳转到主页
+     * @param model model
+     * @return String
+     */
+    @RequestMapping(value = "/main", method = RequestMethod.GET)
+    public String main(Model model) {
+        var userVisibleMenu = this.sysMenuService.getUserVisibleMenu();
+        model.addAttribute("topMenus", userVisibleMenu.getTopMenus());
+        model.addAttribute("leftMenus", userVisibleMenu.getLeftMenus());
+        return "system/main";
+    }
+
+    /**
+     * 退出登陆
+     * @return String
+     */
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout() {
+        CmsSysUserUtil.getSubject().logout();
+        return "system/login";
+    }
+
+    /**
+     * 进入修改密码页面
+     * @param userId 用户id
+     * @param model model
+     * @return String
+     */
+    @RequestMapping(value = "/password/modify", method = RequestMethod.GET)
+    public String modifyPassword(Integer userId, Model model) {
+        var sysUser = this.sysUserService.selectByUserId(userId);
+        model.addAttribute("user", sysUser);
+        return "system/modify_password";
+    }
+
+    /**
+     * 登陆修改密码逻辑
+     * @param id 用户id
+     * @param pass 原始密码
+     * @param newPwd 新密码
+     * @return Response<String>
+     */
+    @RequestMapping(value = "/password/rePass", method = RequestMethod.POST)
+    @ResponseBody
+    public Response<String> rePass(Integer id, String pass, String newPwd) {
+        this.loginService.resetPassword(id, pass, newPwd);
         return Response.ok();
     }
 }

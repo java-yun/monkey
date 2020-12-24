@@ -1,5 +1,6 @@
 package com.monkey.web.dao;
 
+import com.monkey.web.constants.QueryColumnConstants;
 import com.monkey.web.entity.SysRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,10 +16,10 @@ import java.util.List;
 @Repository
 public interface SysRoleRepository extends JpaRepository<SysRole, Integer> {
 
-    @Query(value = """
-        SELECT srole.id AS id, srole.CODE AS CODE, srole.p_code AS pcode, srole.role_name AS roleName
-        FROM sys_role_user roleu, sys_user u, sys_role srole
-        WHERE roleu.user_id = u.id AND srole.id = roleu.role_id AND u.username = ?1
-     """, nativeQuery = true)
+    @Query(value = QueryColumnConstants.SYS_ROLE_SELECT +
+    """
+        FROM sys_role_user ru, sys_user u, sys_role r
+        WHERE ru.user_id = u.id AND r.id = ru.role_id AND u.username = ?1
+    """, nativeQuery = true)
     List<SysRole> getRolesByUsername(String username);
 }

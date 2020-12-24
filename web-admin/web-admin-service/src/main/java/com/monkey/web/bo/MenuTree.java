@@ -12,7 +12,8 @@ import java.util.List;
  */
 @Data
 public class MenuTree implements Serializable {
-    private String id;
+
+    private Integer id;
 
     private String name;
 

@@ -1,5 +1,6 @@
 package com.monkey.web.dao;
 
+import com.monkey.web.constants.QueryColumnConstants;
 import com.monkey.web.entity.SysMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,10 +16,26 @@ import java.util.List;
 @Repository
 public interface SysMenuRepository extends JpaRepository<SysMenu, Integer> {
 
-    @Query(value = """
-        SELECT m.id AS id, m.permission AS permission, m.code AS code, m.p_code AS pCode, m.name AS name
-        FROM sys_role_menu rolem, sys_menu m
-        WHERE rolem.menu_id = m.id AND rolem.role_id IN (?1)
+    @Query(value = QueryColumnConstants.SYS_MENU_SELECT +
+    """
+        FROM sys_role_menu rm, sys_menu m
+        WHERE rm.menu_id = m.id AND rm.role_id IN (?1)
     """, nativeQuery = true)
     List<SysMenu> getMenuByRoleIds(List<Integer> roleIds);
+
+    @Query(value = QueryColumnConstants.SYS_MENU_SELECT +
+    """
+        FROM sys_role_menu rm, sys_menu m
+        WHERE rm.menu_id = m.id AND rm.role_id IN (?1) AND m.p_code = ?2
+        ORDER BY m.order_num
+    """, nativeQuery = true)
+    List<SysMenu> selectByRolesAndParentCode(List<Integer> roleIds, String pCode);
+
+    @Query(value = QueryColumnConstants.SYS_MENU_SELECT +
+    """
+        FROM sys_role_menu rm, sys_menu m
+        WHERE rm.menu_id = m.id AND rm.role_id IN (?1) AND m.p_code like CONCAT(?2,'%') AND m.menu_type = ?3
+        ORDER BY m.`level` , m.order_num
+    """, nativeQuery = true)
+    List<SysMenu> selectMenusByRolesAndParentCode(List<Integer> roleIds, String pCode, Byte isButton);
 }

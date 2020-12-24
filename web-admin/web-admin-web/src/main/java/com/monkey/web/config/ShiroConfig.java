@@ -100,6 +100,7 @@ public class ShiroConfig {
         redisCacheManager.setRedisManager(redisManager());
         //设置过期时间，单位是秒，20s,
         redisCacheManager.setExpire(20);
+        redisCacheManager.setPrincipalIdFieldName("id");
         return redisCacheManager;
     }
 
@@ -109,8 +110,7 @@ public class ShiroConfig {
     @Bean
     public RedisManager redisManager() {
         var redisManager = new RedisManager();
-        redisManager.setHost(host);
-        redisManager.setPort(port);
+        redisManager.setHost(host + ":" + port);
         redisManager.setDatabase(database);
         redisManager.setTimeout(timeout);
         return redisManager;

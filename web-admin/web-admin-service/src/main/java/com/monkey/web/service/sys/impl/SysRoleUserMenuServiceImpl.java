@@ -1,5 +1,7 @@
 package com.monkey.web.service.sys.impl;
 
+import com.monkey.common.utils.Detect;
+import com.monkey.common.utils.IsValid;
 import com.monkey.web.dao.SysMenuRepository;
 import com.monkey.web.dao.SysRoleRepository;
 import com.monkey.web.dao.SysUserRepository;
@@ -38,7 +40,31 @@ public class SysRoleUserMenuServiceImpl implements SysRoleUserMenuService {
 
     @Override
     public List<SysMenu> getButtonsByUsername(String username) {
+        //查询用户角
         var roleIds = this.getRolesByUsername(username).stream().map(SysRole::getId).collect(Collectors.toList());
+        if (Detect.isNullOrEmpty(roleIds)) {
+            return null;
+        }
         return this.menuRepository.getMenuByRoleIds(roleIds);
+    }
+
+    @Override
+    public List<SysMenu> getOneLevel(String username) {
+        //查询用户角色
+        var roleIds = this.getRolesByUsername(username).stream().map(SysRole::getId).collect(Collectors.toList());
+        if (Detect.isNullOrEmpty(roleIds)) {
+            return null;
+        }
+        return this.menuRepository.selectByRolesAndParentCode(roleIds, "");
+    }
+
+    @Override
+    public List<SysMenu> getUserMenusByParent(String username, String pCode, Byte isButton) {
+        //查询用户角色
+        var roleIds = this.getRolesByUsername(username).stream().map(SysRole::getId).collect(Collectors.toList());
+        if (Detect.isNullOrEmpty(roleIds)) {
+            return null;
+        }
+        return this.menuRepository.selectMenusByRolesAndParentCode(roleIds, pCode, isButton);
     }
 }

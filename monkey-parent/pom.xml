@@ -38,7 +38,7 @@
         <logback-classic.version>1.2.3</logback-classic.version>
         <javax-servlet.version>2.5</javax-servlet.version>
         <shiro-spring.version>1.4.0</shiro-spring.version>
-        <shiro-redis.version>3.1.0</shiro-redis.version>
+        <shiro-redis.version>3.2.3</shiro-redis.version>
         <shiro-freemarker.version>1.0.0</shiro-freemarker.version>
         <tk-mapper.version>2.1.5</tk-mapper.version>
         <ezmorph.version>1.0.6</ezmorph.version>

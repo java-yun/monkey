@@ -123,3 +123,4 @@ logging:
 monkey:
   web:
     is_debug: true
+    default-password: 123456

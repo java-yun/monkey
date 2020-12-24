@@ -217,7 +217,7 @@ public class CommonParamCheckUtils {
 
 	public void checkParam(){
         if (isCheckPhoneNum && !phoneNum.matches(PHONE_CHECK_REGEXP)) {
-            log.error("手机号格式不正确，phoneNum：{}", phoneNum);
+            log.error("incorrect phone number format，phoneNum：{}", phoneNum);
             throw SystemException.throwException(BizCode.ILLEGAL_PHONE_NUM);
         }
     }

@@ -2,19 +2,19 @@
  * Created by caoxue on 2018/5/10.
  */
 function getCtxPath(){
-    var curWwwPath=window.document.location.href;
-    var pathName=window.document.location.pathname;
-    var pos=curWwwPath.indexOf(pathName);
-    var localhostPaht=curWwwPath.substring(0,pos);
-    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    const curWwwPath = window.document.location.href;
+    const pathName=window.document.location.pathname;
+    const pos=curWwwPath.indexOf(pathName);
+    const localhostPaht=curWwwPath.substring(0,pos);
+    const projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
     return(localhostPaht+projectName);
 }
 
 function getCtxProjectPath(){
-    var curWwwPath=window.document.location.href;
-    var pathName=window.document.location.pathname;
-    var pos=curWwwPath.indexOf(pathName);
-    var localhostPaht=curWwwPath.substring(0,pos);
-    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    const curWwwPath=window.document.location.href;
+    const pathName=window.document.location.pathname;
+    const pos=curWwwPath.indexOf(pathName);
+    const localhostPaht=curWwwPath.substring(0,pos);
+    const projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
     return (projectName);
 }

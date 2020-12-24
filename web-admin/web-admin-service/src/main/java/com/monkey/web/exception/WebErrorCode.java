@@ -18,6 +18,7 @@ public class WebErrorCode extends BizCode {
     public static final WebErrorCode NEW_PWD_EQUALS_OLD = new WebErrorCode("004", "新老密码相同");
     public static final WebErrorCode OLD_PWD_ERROR = new WebErrorCode("005", "老密码错误");
     public static final WebErrorCode PARAM_ERROR = new WebErrorCode("006", "参数异常");
+    public static final WebErrorCode PWD_LENGTH_ERROR = new WebErrorCode("007", "密码长度不规范");
 
     private WebErrorCode(String code, String msg, CodePrefix codePrefix) {
         super(code, msg, codePrefix);

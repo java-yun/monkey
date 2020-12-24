@@ -3,45 +3,44 @@
  * 统一处理js方法
  */
 /**框架*/
-
-var message;
+let message;
 layui.config({
   base: getCtxPath() + '/plugin/build/js/',
   version: '1.0.1'
 }).use(['app', 'message', 'element'], function() {
-  var app = layui.app,
-      $ = layui.jquery,
-      element = layui.element,
-      layer = layui.layer;
-  //将message设置为全局以便子页面调用
+    const switchSkin = function(value) {
+      var _target = $('link[kit-skin]')[0];
+      _target.href = _target.href.substring(0, _target.href.lastIndexOf('/') + 1) + value + _target.href.substring(_target.href.lastIndexOf('.'));
+      setSkin(value);
+    };
+    const app = layui.app,
+        $ = layui.jquery,
+        element = layui.element,
+        layer = layui.layer;
+    //将message设置为全局以便子页面调用
   message = layui.message;
   //主入口
   app.set({
     type: 'iframe'
   }).init();
   $('dl.skin > dd').on('click', function() {
-    var $that = $(this);
-    var skin = $that.children('a').data('skin');
-    switchSkin(skin);
+      const $that = $(this);
+      const skin = $that.children('a').data('skin');
+      switchSkin(skin);
   });
-  var setSkin = function(value) {
-        layui.data('kit_skin', {
-          key: 'skin',
-          value: value
-        });
-      },
-      getSkinName = function() {
-        return layui.data('kit_skin').skin;
-      },
-      switchSkin = function(value) {
-        var _target = $('link[kit-skin]')[0];
-        _target.href = _target.href.substring(0, _target.href.lastIndexOf('/') + 1) + value + _target.href.substring(_target.href.lastIndexOf('.'));
-        setSkin(value);
-      },
-      initSkin = function() {
-        var skin = getSkinName();
-        switchSkin(skin === undefined ? 'default' : skin);
-      }();
+    const setSkin = function (value) {
+            layui.data('kit_skin', {
+                key: 'skin',
+                value: value
+            });
+        },
+        getSkinName = function () {
+            return layui.data('kit_skin').skin;
+        },
+        initSkin = function () {
+            var skin = getSkinName();
+            switchSkin(skin === undefined ? 'default' : skin);
+        }();
 
 
     $('.change-mode').on('click', function () {
@@ -52,7 +51,7 @@ layui.config({
             type: "GET",
             success: function (data) {
                 var buffer = new StringBuffer();
-                if(data.code == '000000') {
+                if(data.code === '000000') {
                     if(data.data != null && data.data.length > 0) {
                         for (i in data.data) {
                             replaceHtml(data.data[i], buffer);
@@ -105,67 +104,66 @@ layui.config({
         var id = $(this).attr("data-module-id");
         main_rePwd('修改密码', 'user/goRePass?type=main&id=' + id, 500, 350);
     });
-        function main_detail(title, url, w, h) {
-            var number = 1;
-            if (title == null || title == '') {
-                title = false;
-            }
-            ;
-            if (url == null || url == '') {
-                url = "error/404";
-            }
-            ;
-            if (w == null || w == '') {
-                w = ($(window).width() * 0.9);
-            }
-            ;
-            if (h == null || h == '') {
-                h = ($(window).height() - 50);
-            }
-            ;
-            layer.open({
-                id: 'main-user-detail',
-                type: 2,
-                area: [w + 'px', h + 'px'],
-                fix: false,
-                maxmin: true,
-                shadeClose: true,
-                shade: 0.4,
-                title: title,
-                content: url + '&detail=true',
-                // btn:['关闭']
-            });
-        } 
-        
-        function main_rePwd(title, url, w, h) {
-            if (title == null || title == '') {
-                title = false;
-            }
-            ;
-            if (url == null || url == '') {
-                url = "404.html";
-            }
-            ;
-            if (w == null || w == '') {
-                w = ($(window).width() * 0.9);
-            }
-            ;
-            if (h == null || h == '') {
-                h = ($(window).height() - 50);
-            }
-            ;
-            layer.open({
-                id: 'main_user-rePwd',
-                type: 2,
-                area: [w + 'px', h + 'px'],
-                fix: false,
-                maxmin: true,
-                shadeClose: true,
-                shade: 0.4,
-                title: title,
-                content: url,
-            });
+    function main_detail(title, url, w, h) {
+        if (title == null || title === '') {
+            title = false;
         }
+        ;
+        if (url == null || url === '') {
+            url = "error/404";
+        }
+        ;
+        if (w == null || w === '') {
+            w = ($(window).width() * 0.9);
+        }
+        ;
+        if (h == null || h === '') {
+            h = ($(window).height() - 50);
+        }
+        ;
+        layer.open({
+            id: 'main-user-detail',
+            type: 2,
+            area: [w + 'px', h + 'px'],
+            fix: false,
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.4,
+            title: title,
+            content: url + '&detail=true',
+            // btn:['关闭']
+        });
+    }
+
+    function main_rePwd(title, url, w, h) {
+        if (title == null || title == '') {
+            title = false;
+        }
+        ;
+        if (url == null || url == '') {
+            url = "404.html";
+        }
+        ;
+        if (w == null || w == '') {
+            w = ($(window).width() * 0.9);
+        }
+        ;
+        if (h == null || h == '') {
+            h = ($(window).height() - 50);
+        }
+        ;
+        layer.open({
+            id: 'main_user-rePwd',
+            type: 2,
+            area: [w + 'px', h + 'px'],
+            fix: false,
+            maxmin: true,
+            shadeClose: true,
+            shade: 0.4,
+            title: title,
+            content: url,
+        });
+    }
         
     function StringBuffer() {
         this.__strings__ = new Array;

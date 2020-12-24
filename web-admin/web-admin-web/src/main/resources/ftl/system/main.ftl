@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>绯石之心</title>
+  <title>monkey</title>
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/layui/css/layui.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/font-awesome/css/font-awesome.min.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/build/css/app.css" media="all" />
@@ -19,7 +19,7 @@
 <body class="kit-theme">
 <div class="layui-layout layui-layout-admin kit-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">绯石之心数据后台</div>
+    <div class="layui-logo">monkey数据后台</div>
     <div class="layui-logo kit-logo-mobile"></div>
     <div class="layui-hide-xs">
     <ul class="layui-nav layui-layout-left kit-nav">

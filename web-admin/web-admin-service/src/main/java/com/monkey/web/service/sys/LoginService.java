@@ -21,4 +21,12 @@ public interface LoginService {
      * @param username username
      */
     void sendMsg(String username);
+
+    /**
+     * 重置密码
+     * @param id 用户id
+     * @param pass 原密码
+     * @param newPwd 新密码
+     */
+    void resetPassword(Integer id, String pass, String newPwd);
 }

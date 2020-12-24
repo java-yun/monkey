@@ -25,4 +25,20 @@ public interface SysRoleUserMenuService {
      * @return List<SysMenu>
      */
     List<SysMenu> getButtonsByUsername(String username);
+
+    /**
+     * 查询用户的一级菜单
+     * @param username username
+     * @return List<SysMenu>
+     */
+    List<SysMenu> getOneLevel(String username);
+
+    /**
+     * 查询用户某个菜单的子菜单
+     * @param username username
+     * @param pCode pCode
+     * @param isButton isButton
+     * @return List<SysMenu>
+     */
+    List<SysMenu> getUserMenusByParent(String username, String pCode, Byte isButton);
 }
