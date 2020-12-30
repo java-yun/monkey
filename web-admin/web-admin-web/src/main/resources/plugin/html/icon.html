@@ -9,22 +9,21 @@
   <script type="text/javascript" src="/plugin/layui/layui.all.js" charset="utf-8"></script>
 </head>
 <script>
- $(function(){
-       var layer = layui.layer;
-    $('li').on('click',function(){
-      var text=$(this).find('div').eq(1).html();
-      text=text.substring(5,text.length);
-      var icon=$("#menu-icon" , window.parent.frames[0].document);
+  $(function () {
+    const layer = layui.layer;
+    $('li').on('click', function () {
+      let text = $(this).find('div').eq(1).html();
+      text = text.substring(5, text.length);
+      const icon = $("#menu-icon", window.parent.frames[0].document);
       icon.find('i').remove();
-      icon.append('<i class="layui-icon" id="icon" style="font-size: 25px;">&'+text+'</i>');
-      var index = parent.layer.getFrameIndex(window.name);
+      icon.append('<i class="layui-icon" id="icon" style="font-size: 25px;">&' + text + '</i>');
+      const index = parent.layer.getFrameIndex(window.name);
       parent.layer.close(index);
     });
   });
 </script>
 
 <style>
-  .layui-icon{font-size: 30px;}
   .site-doc-icon {
     margin-bottom: 50px;
     font-size: 0;

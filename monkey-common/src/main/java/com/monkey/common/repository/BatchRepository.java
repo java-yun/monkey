@@ -69,9 +69,7 @@ public class BatchRepository {
             for (int i = 0; i < records.size(); i++) {
                 builder.append("(");
                 //根据要插入的字段
-                for (int j = 0; j < insertColumns.size(); j++) {
-                    builder.append("?, ");
-                }
+                builder.append("?, ".repeat(insertColumns.size()));
                 builder.deleteCharAt(builder.lastIndexOf(","));
                 builder.append("),");
             }

@@ -87,6 +87,13 @@
                     <!--suppress UnresolvedMavenProperty -->
                     <include>application-${spring.profile.active}.yml</include>
                     <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 注意此处必须为false，否则 layui的icon无法显示 -->
+                <filtering>false</filtering>
+                <includes>
                     <include>ftl/**</include>
                     <include>plugin/**</include>
                 </includes>

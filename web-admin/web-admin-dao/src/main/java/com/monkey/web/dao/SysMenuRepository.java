@@ -3,6 +3,7 @@ package com.monkey.web.dao;
 import com.monkey.web.constants.QueryColumnConstants;
 import com.monkey.web.entity.SysMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -38,4 +39,39 @@ public interface SysMenuRepository extends JpaRepository<SysMenu, Integer> {
         ORDER BY m.`level` , m.order_num
     """, nativeQuery = true)
     List<SysMenu> selectMenusByRolesAndParentCode(List<Integer> roleIds, String pCode, Byte isButton);
+
+    @Query(value = QueryColumnConstants.SYS_MENU_SELECT +
+            """
+                FROM sys_menu m
+                ORDER BY m.`level` , m.order_num
+            """, nativeQuery = true)
+    List<SysMenu> getAllMenus();
+
+    @Query(value = QueryColumnConstants.SYS_MENU_SELECT +
+            """
+                FROM sys_menu m
+                WHERE m.menu_type = 0
+                ORDER BY m.`level` , m.order_num
+            """, nativeQuery = true)
+    List<SysMenu> getAllMenusExcludeButton();
+
+    SysMenu findByCode(String code);
+
+    @Query(value = "select max(code) from sys_menu where p_code = ?1", nativeQuery = true)
+    String getMaxCodeByPCode(String pCode);
+
+    @Modifying
+    @Query(value = "delete from sys_role_menu where menu_id = ?1", nativeQuery = true)
+    Long deleteRoleMenuByMenuId(Integer id);
+
+    @Query(value = "select menu_id from sys_role_menu where role_id = ?1", nativeQuery = true)
+    List<Integer> getMenuIdsByRoleId(Integer roleId);
+
+    @Modifying
+    @Query(value = "delete from sys_role_menu where menu_id in (?1)", nativeQuery = true)
+    Long deleteRoleMenuByMenuIds(List<Integer> menuIds);
+
+    @Modifying
+    @Query(value = "delete from sys_role_menu where role_id in (?1)", nativeQuery = true)
+    Long deleteRoleMenuByRoleIds(List<Integer> roleIds);
 }

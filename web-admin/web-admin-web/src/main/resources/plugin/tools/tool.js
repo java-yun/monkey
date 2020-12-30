@@ -1,21 +1,17 @@
 //通用
 function popup(title, url, w, h, id) {
-    if (title == null || title == '') {
+    if (title == null || title === '') {
         title = false;
     }
-    ;
-    if (url == null || url == '') {
+    if (url == null || url === '') {
         url = "error/404";
     }
-    ;
-    if (w == null || w == '') {
+    if (w == null || w === '') {
         w = ($(window).width() * 0.9);
     }
-    ;
-    if (h == null || h == '') {
+    if (h == null || h === '') {
         h = ($(window).height() - 50);
     }
-    ;
     layer.open({
         id: id,
         type: 2,
@@ -43,7 +39,7 @@ function postAjaxre(url, data, tableId) {
         dataType: "json", traditional: true,
         success: function (data) {
             if (data.flag) {
-                var index = parent.layer.getFrameIndex(window.name);
+                const index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
                 window.parent.layui.table.reload(tableId);
                 window.top.layer.msg(data.msg, {icon: 6, offset: 'rb', area: ['120px', '80px'], anim: 2});
@@ -61,8 +57,8 @@ function layerAjax(url, data, tableId) {
         data: data ,
         traditional: true,
         success: function (d) {
-            var index = parent.layer.getFrameIndex(window.name);
-            if (d.code == '000000') {
+            const index = parent.layer.getFrameIndex(window.name);
+            if (d.code === '000000') {
                 parent.layer.close(index);
                 window.parent.layui.table.reload(tableId);
                 window.top.layer.msg(d.msg, {icon: 1});
@@ -71,7 +67,7 @@ function layerAjax(url, data, tableId) {
             }
         }, error: function (e) {
             layer.msg("发生错误", {icon: 2}, function () {
-                var index = parent.layer.getFrameIndex(window.name);
+                const index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             });
         }
@@ -80,7 +76,7 @@ function layerAjax(url, data, tableId) {
 
 function eleClick(active, ele) {
     $(ele).on('click', function () {
-        var type = $(this).data('type');
+        const type = $(this).data('type');
         active[type] ? active[type].call(this) : '';
     });
 }

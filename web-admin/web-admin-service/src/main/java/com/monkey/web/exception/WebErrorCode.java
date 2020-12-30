@@ -19,6 +19,10 @@ public class WebErrorCode extends BizCode {
     public static final WebErrorCode OLD_PWD_ERROR = new WebErrorCode("005", "老密码错误");
     public static final WebErrorCode PARAM_ERROR = new WebErrorCode("006", "参数异常");
     public static final WebErrorCode PWD_LENGTH_ERROR = new WebErrorCode("007", "密码长度不规范");
+    public static final WebErrorCode MENU_NAME_IS_EMPTY = new WebErrorCode("008", "菜单名称为空");
+    public static final WebErrorCode ILLEGAL_MENU_TYPE = new WebErrorCode("009", "菜单类型为空");
+    public static final WebErrorCode MENU_LEVEL_IS_EMPTY = new WebErrorCode("010", "菜单级别为空");
+    public static final WebErrorCode PARENT_CODE_EMPTY = new WebErrorCode("011", "父菜单为空");
 
     private WebErrorCode(String code, String msg, CodePrefix codePrefix) {
         super(code, msg, codePrefix);

@@ -13,4 +13,6 @@ public final class WebConstants {
     public static final int ERROR_TIMES_EXPIRE_SECONDS = 10 * 60;
 
     public static final int CMS_PASSWORD_HASH_ITERATIONS = 4;
+
+    public static final int JPA_BATCH_INSERT_SIZE = 1000;
 }

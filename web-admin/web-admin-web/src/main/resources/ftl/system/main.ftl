@@ -26,31 +26,31 @@
       <#list topMenus as child>
       	<#if child_index == 0>
             <li class="layui-nav-item layui-this" >
-                <a class="change-mode" data-module-id="${child.code}" href="javascript:;"><i aria-hidden="true" class="layui-icon">${child.icon}</i><span> ${child.name}</span></a>
+                <a class="change-mode" data-module-id="${child.code}" href="#"><i aria-hidden="true" class="layui-icon">${child.icon}</i><span> ${child.name}</span></a>
             </li>
         <#else>
             <li class="layui-nav-item" >
-                <a class="change-mode" data-module-id="${child.code}" href="javascript:;"><i aria-hidden="true" class="layui-icon">${child.icon}</i><span> ${child.name}</span></a>
+                <a class="change-mode" data-module-id="${child.code}" href="#"><i aria-hidden="true" class="layui-icon">${child.icon}</i><span> ${child.name}</span></a>
             </li>
         </#if>
       </#list>
     </div>
     <ul class="layui-nav layui-layout-right kit-nav">
       <li class="layui-nav-item">
-        <a href="javascript:;">
-          <i class="layui-icon">&#xe63f;</i> 皮肤</a>
+        <a href="#">
+          <i class="layui-icon">&#xe63f;</i> 皮肤
         </a>
         <dl class="layui-nav-child skin">
-          <dd><a href="javascript:;" data-skin="default" style="color:#393D49;"><i class="layui-icon">&#xe658;</i> 默认</a></dd>
-          <dd><a href="javascript:;" data-skin="orange" style="color:#ff6700;"><i class="layui-icon">&#xe658;</i> 橘子橙</a></dd>
-          <dd><a href="javascript:;" data-skin="green" style="color:#00a65a;"><i class="layui-icon">&#xe658;</i> 春天绿</a></dd>
-          <dd><a href="javascript:;" data-skin="pink" style="color:#FA6086;"><i class="layui-icon">&#xe658;</i> 少女粉</a></dd>
-          <dd><a href="javascript:;" data-skin="blue.1" style="color:#00c0ef;"><i class="layui-icon">&#xe658;</i> 天空蓝</a></dd>
-          <dd><a href="javascript:;" data-skin="red" style="color:#dd4b39;"><i class="layui-icon">&#xe658;</i> 枫叶红</a></dd>
+          <dd><a href="#" data-skin="default" style="color:#393D49;"><i class="layui-icon">&#xe658;</i> 默认</a></dd>
+          <dd><a href="#" data-skin="orange" style="color:#ff6700;"><i class="layui-icon">&#xe658;</i> 橘子橙</a></dd>
+          <dd><a href="#" data-skin="green" style="color:#00a65a;"><i class="layui-icon">&#xe658;</i> 春天绿</a></dd>
+          <dd><a href="#" data-skin="pink" style="color:#FA6086;"><i class="layui-icon">&#xe658;</i> 少女粉</a></dd>
+          <dd><a href="#" data-skin="blue.1" style="color:#00c0ef;"><i class="layui-icon">&#xe658;</i> 天空蓝</a></dd>
+          <dd><a href="#" data-skin="red" style="color:#dd4b39;"><i class="layui-icon">&#xe658;</i> 枫叶红</a></dd>
         </dl>
       </li>
       <li class="layui-nav-item">
-        <a href="javascript:;">
+        <a href="#">
           <#assign currentUser = Session["currentUser"]>
           ${currentUser.username}
         </a>
@@ -92,14 +92,14 @@
   </#if>
 </#macro>
 <@tree data=leftMenus start="start" end="end"/>
-  <div class="layui-body" <#--style="border:1px solid red;padding-bottom:0;"--> id="container">
+  <div class="layui-body" id="container">
     <!-- 内容主体区域 -->
     <div style="padding: 15px;"><i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop">&#xe63e;</i> 请稍等...</div>
   </div>
 
   <div class="layui-footer">
   <!-- 底部固定区域 -->
-  2019 &copy; CMS管理系统
+  2020 &copy; CMS管理系统
 </div>
 </div>
 <script src="${re.contextPath}/plugin/plugins/layui/layui.js"></script>

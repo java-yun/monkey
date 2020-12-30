@@ -65,4 +65,11 @@ public class SysMenu {
     @Transient
     private boolean checked = false;
 
+    /**
+     * 是否是顶级菜单
+     * 0: false, 1: true
+     */
+    @Transient
+    private String isTop;
+
 }
