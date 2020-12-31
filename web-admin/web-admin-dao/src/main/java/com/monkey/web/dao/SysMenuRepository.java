@@ -60,18 +60,4 @@ public interface SysMenuRepository extends JpaRepository<SysMenu, Integer> {
     @Query(value = "select max(code) from sys_menu where p_code = ?1", nativeQuery = true)
     String getMaxCodeByPCode(String pCode);
 
-    @Modifying
-    @Query(value = "delete from sys_role_menu where menu_id = ?1", nativeQuery = true)
-    Long deleteRoleMenuByMenuId(Integer id);
-
-    @Query(value = "select menu_id from sys_role_menu where role_id = ?1", nativeQuery = true)
-    List<Integer> getMenuIdsByRoleId(Integer roleId);
-
-    @Modifying
-    @Query(value = "delete from sys_role_menu where menu_id in (?1)", nativeQuery = true)
-    Long deleteRoleMenuByMenuIds(List<Integer> menuIds);
-
-    @Modifying
-    @Query(value = "delete from sys_role_menu where role_id in (?1)", nativeQuery = true)
-    Long deleteRoleMenuByRoleIds(List<Integer> roleIds);
 }

@@ -2,6 +2,7 @@ package com.monkey.web.service.sys;
 
 import com.monkey.web.entity.SysRole;
 import com.monkey.web.request.RoleRequest;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -14,11 +15,11 @@ import java.util.List;
 public interface SysRoleService {
 
     /**
-     * 查询角色  列表
+     * 查询角色  列表 page
      * @param request request
-     * @return List<SysRole>
+     * @return Page<SysRole>
      */
-    List<SysRole> getRoleList(RoleRequest request);
+    Page<SysRole> getRoleListWithPage(RoleRequest request);
 
     /**
      * 根据主键查询
@@ -39,4 +40,11 @@ public interface SysRoleService {
      * @param ids ids
      */
     void deleteRoleById(String ids);
+
+    /**
+     * 查询角色  列表
+     * @param request request
+     * @return List<SysRole>
+     */
+    List<SysRole> getRoleList(RoleRequest request);
 }

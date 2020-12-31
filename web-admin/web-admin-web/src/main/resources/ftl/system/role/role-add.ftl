@@ -5,7 +5,7 @@ Time: 10:00
 To change this template use File | Settings | File Templates.-->
 
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -23,7 +23,7 @@ To change this template use File | Settings | File Templates.-->
     <script type="text/javascript" src="${re.contextPath}/plugin/tools/tool.js"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/js/common/merchant.common.js"></script>
     <script type="text/javascript">
-        var setting = {
+        const setting = {
             check: {
                 enable: true
             },
@@ -33,7 +33,7 @@ To change this template use File | Settings | File Templates.-->
                 }
             }
         };
-        var zNodes =${menus};
+        let zNodes = ${menus};
         $(document).ready(function () {
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
@@ -54,8 +54,7 @@ To change this template use File | Settings | File Templates.-->
                     <span class="x-red">*&nbsp;</span>角色名称
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="roleName" name="roleName" lay-verify="rolename"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" id="roleName" name="roleName" lay-verify="roleName" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -102,45 +101,43 @@ To change this template use File | Settings | File Templates.-->
 </div>
 <script>
     layui.use(['form', 'layer'], function () {
-        $ = layui.jquery;
-        var form = layui.form
-                , layer = layui.layer;
+        const $ = layui.jquery;
+        const form = layui.form, layer = layui.layer;
 
         //自定义验证规则
         form.verify({
-            rolename: function (value) {
-                if (value.trim() == "") {
+            roleName: function (value) {
+                if (value.trim() === "") {
                     return "角色名不能为空";
                 }
             }
         });
 
         $('#close').click(function () {
-            var index = parent.layer.getFrameIndex(window.name);
+            const index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
         });
         //监听提交
         form.on('submit(add)', function (data) {
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-            var jsonArr = zTree.getCheckedNodes(true);
-            var menus = [];
-            for (var item in jsonArr) {
+            const zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            const jsonArr = zTree.getCheckedNodes(true);
+            const menus = [];
+            for (const item in jsonArr) {
                 menus.push(jsonArr[item].id);
             }
             data.field.menus = menus.join(",");
-            var loading = honglu.dialog.load();
+            const loading = honglu.dialog.load();
             honglu.ajax.post('${re.contextPath}/role/updateRole', data.field, function (result) {
                 honglu.dialog.close(loading);
-                if (result.code == '000000') {
-                    var index = parent.layer.getFrameIndex(window.name);
+                if (result.code === '000000') {
+                    const index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
+                    window.top.layer.msg(result.msg, {icon: 6, anim: 2});
                     window.parent.layui.table.reload('roleList');
-                    window.top.layer.msg(result.msg, {icon: 6, offset: 'rb', area: ['120px', '80px'], anim: 2});
                 } else {
-                    layer.msg(result.msg, {icon: 5, offset: 'rb', area: ['120px', '80px'], anim: 2});
+                    layer.msg(result.msg, {icon: 5, anim: 2});
                 }
             });
-
             // layerAjax('updateRole', data.field, 'roleList');
             return false;
         });

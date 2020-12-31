@@ -4,6 +4,7 @@ import com.monkey.common.utils.Detect;
 import com.monkey.common.utils.IsValid;
 import com.monkey.web.bo.UserVisibleMenu;
 import com.monkey.web.dao.SysMenuRepository;
+import com.monkey.web.dao.SysRoleMenuRepository;
 import com.monkey.web.entity.SysMenu;
 import com.monkey.web.exception.WebErrorCode;
 import com.monkey.web.exception.WebException;
@@ -141,7 +142,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteMenu(Integer id) {
         //删除菜单角色中间表数据
-        this.sysMenuRepository.deleteRoleMenuByMenuId(id);
+        this.sysRoleUserMenuService.deleteRoleMenuByMenuId(id);
         this.sysMenuRepository.deleteById(id);
     }
 }

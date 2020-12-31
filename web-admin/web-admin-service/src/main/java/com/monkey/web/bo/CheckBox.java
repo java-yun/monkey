@@ -13,7 +13,7 @@ public class CheckBox implements Serializable {
     /**
      * id
      */
-    private String id;
+    private Integer id;
     /**
      * 名称
      */

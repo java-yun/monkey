@@ -1,5 +1,6 @@
 package com.monkey.web.request;
 
+import com.monkey.common.request.PageRequest;
 import lombok.Data;
 
 /**
@@ -8,13 +9,10 @@ import lombok.Data;
  * @date 2020/12/30 14:06
  */
 @Data
-public class RoleRequest {
+public class RoleRequest extends PageRequest {
 
     private String roleName;
 
     private String description;
 
-    private Integer page;
-
-    private Integer limit = 20;
 }

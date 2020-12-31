@@ -1,6 +1,9 @@
 package com.monkey.web.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +15,9 @@ import java.util.Date;
  */
 @Data
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "sys_role")
 public class SysRole {
 

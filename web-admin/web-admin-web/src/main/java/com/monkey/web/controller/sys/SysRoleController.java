@@ -1,6 +1,7 @@
 package com.monkey.web.controller.sys;
 
 import com.alibaba.fastjson.JSON;
+import com.monkey.common.response.LayUiTableResponse;
 import com.monkey.common.response.Response;
 import com.monkey.web.entity.SysMenu;
 import com.monkey.web.entity.SysRole;
@@ -11,6 +12,7 @@ import com.monkey.web.service.sys.SysRoleUserMenuService;
 import com.monkey.web.utils.MenuUtil;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,13 +57,14 @@ public class SysRoleController {
     /**
      * 查询角色列表
      * @param request request
-     * @return String
+     * @return LayUiTableResponse<List<SysRole>>
      */
     @RequiresPermissions("role:show")
     @GetMapping(value = "/showRoleList")
     @ResponseBody
-    public String showRoleList(RoleRequest request) {
-        return JSON.toJSONString(sysRoleService.getRoleList(request));
+    public LayUiTableResponse<List<SysRole>> showRoleList(RoleRequest request) {
+        Page<SysRole> page = sysRoleService.getRoleListWithPage(request);
+        return LayUiTableResponse.ok(page.getContent(), page.getSize());
     }
 
     /**

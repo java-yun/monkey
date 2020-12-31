@@ -30,7 +30,7 @@
                         const url = getCtxPath() + '/user/del';
                         honglu.dialog.confirm(msg, function () {
                             honglu.ajax.post(url, {id: obj.id}, function (result) {
-                                if (result.code == '000000') {
+                                if (result.code === '000000') {
                                     honglu.dialog.alert("删除成功！", function () {
                                         layui.table.reload('dataList');
                                     });
@@ -60,8 +60,8 @@
                     {field: 'age', title: '年龄', width: '10%', align: 'center'},
                     {field: 'email', title: '邮箱', width: '10%', align: 'center'},
                     {field: 'createBy', title: '创建人', width: '10%', align: 'center'},
-                    {field: 'createDate', title: '创建时间', width: '10%', align: 'center', templet: '<div>{{ honglu.util.dateFormat(d.createDate) }}</div>'},
-                    {field: 'updateDate', title: '更新时间', width: '10%', align: 'center', templet: '<div>{{ honglu.util.dateFormat(d.updateDate) }}</div>'},
+                    {field: 'createDate', title: '创建时间', width: '10%', align: 'center', template: '<div>{{ honglu.util.dateFormat(d.createDate) }}</div>'},
+                    {field: 'updateDate', title: '更新时间', width: '10%', align: 'center', template: '<div>{{ honglu.util.dateFormat(d.updateDate) }}</div>'},
                     {field: 'right', fixed: 'right', title: '操作', width: '20%', align: 'center', toolbar: "#barDemo"}
                 ]]
             }
@@ -93,7 +93,7 @@
                 honglu.dialog.confirm("确定删除勾选的" + ids.length + "个用户？", function () {
                     const url = getCtxPath() + '/user/del'
                     honglu.ajax.post(url, {id: ids.join(",")}, function (result) {
-                        if (result.code == '000000') {
+                        if (result.code === '000000') {
                             honglu.dialog.alert("删除成功！", function () {
                                 layui.table.reload('dataList');
                             });

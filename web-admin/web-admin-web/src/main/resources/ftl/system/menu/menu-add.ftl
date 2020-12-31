@@ -5,7 +5,7 @@ Time: 12:40
 To change this template use File | Settings | File Templates.-->
 
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
@@ -261,15 +261,15 @@ To change this template use File | Settings | File Templates.-->
                     console.info(data.msg);
                     if(data.code === "000000") {
                         const index = parent.layer.getFrameIndex(window.name);
-                        window.top.layer.msg(data.msg, {icon: 6, offset: 'rb', area: ['120px', '80px'], anim: 2});
+                        window.top.layer.msg(data.msg, {icon: 6, anim: 2});
                         parent.layer.close(index);
                         parent.location.replace(parent.location.href);
                     } else {
-                        window.top.layer.msg(data.msg, {icon: 5, offset: 'rb', area: ['120px', '80px'], anim: 2});
+                        window.top.layer.msg(data.msg, {icon: 5, anim: 2});
                     }
                 }, error: function () {
                     const index = parent.layer.getFrameIndex(window.name);
-                    window.top.layer.msg('请求失败', {icon: 5, offset: 'rb', area: ['120px', '80px'], anim: 2});
+                    window.top.layer.msg('请求失败', {icon: 5, anim: 2});
                     parent.layer.close(index);
                 }
             });

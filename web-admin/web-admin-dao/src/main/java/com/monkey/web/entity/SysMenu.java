@@ -2,6 +2,9 @@ package com.monkey.web.entity;
 
 import java.util.Date;
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 
@@ -11,6 +14,9 @@ import javax.persistence.*;
  * @date 2020/12/17 11:57
  */
 @Entity
+@DynamicInsert
+@DynamicUpdate
+@SelectBeforeUpdate
 @Table(name = "sys_menu")
 @Data
 public class SysMenu {

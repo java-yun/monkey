@@ -1,14 +1,12 @@
 package com.monkey.web.service.sys.impl;
 
 import com.monkey.common.utils.Detect;
-import com.monkey.common.utils.IsValid;
 import com.monkey.web.constants.WebConstants;
-import com.monkey.web.dao.SysMenuRepository;
-import com.monkey.web.dao.SysRoleRepository;
-import com.monkey.web.dao.SysUserRepository;
+import com.monkey.web.dao.*;
 import com.monkey.web.entity.SysMenu;
 import com.monkey.web.entity.SysRole;
 import com.monkey.web.entity.SysRoleMenu;
+import com.monkey.web.entity.SysRoleUser;
 import com.monkey.web.service.sys.SysRoleUserMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,16 +31,20 @@ public class SysRoleUserMenuServiceImpl implements SysRoleUserMenuService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final SysUserRepository userRepository;
-
     private final SysRoleRepository roleRepository;
 
     private final SysMenuRepository menuRepository;
 
-    public SysRoleUserMenuServiceImpl(SysUserRepository userRepository, SysRoleRepository roleRepository, SysMenuRepository menuRepository) {
-        this.userRepository = userRepository;
+    private final SysRoleMenuRepository roleMenuRepository;
+
+    private final SysRoleUserRepository roleUserRepository;
+
+    public SysRoleUserMenuServiceImpl(SysRoleRepository roleRepository, SysMenuRepository menuRepository,
+                                      SysRoleMenuRepository roleMenuRepository, SysRoleUserRepository roleUserRepository) {
         this.roleRepository = roleRepository;
         this.menuRepository = menuRepository;
+        this.roleMenuRepository = roleMenuRepository;
+        this.roleUserRepository = roleUserRepository;
     }
 
     @Override
@@ -82,12 +84,17 @@ public class SysRoleUserMenuServiceImpl implements SysRoleUserMenuService {
 
     @Override
     public List<Integer> getMenuIdsByRoleId(Integer roleId) {
-        return this.menuRepository.getMenuIdsByRoleId(roleId);
+        return this.roleMenuRepository.getMenuIdsByRoleId(roleId);
+    }
+
+    @Override
+    public void deleteRoleMenuByMenuId(Integer menuId) {
+        this.roleMenuRepository.deleteRoleMenuByMenuId(menuId);
     }
 
     @Override
     public void deleteRoleMenuByMenuIds(List<Integer> menuIds) {
-        this.menuRepository.deleteRoleMenuByMenuIds(menuIds);
+        this.roleMenuRepository.deleteRoleMenuByMenuIds(menuIds);
     }
 
     @Override
@@ -97,9 +104,11 @@ public class SysRoleUserMenuServiceImpl implements SysRoleUserMenuService {
             return;
         }
         int size = roleMenuList.size() % WebConstants.JPA_BATCH_INSERT_SIZE == 0 ? roleMenuList.size() / WebConstants.JPA_BATCH_INSERT_SIZE : roleMenuList.size() / WebConstants.JPA_BATCH_INSERT_SIZE + 1;
-        log.info("batch insert times: {}", size);
+        log.info("batch insert sys_role_menu times: {}", size);
         IntStream.range(0, size).forEach(i -> {
-            var list = roleMenuList.subList(i * WebConstants.JPA_BATCH_INSERT_SIZE, (i + 1) * WebConstants.JPA_BATCH_INSERT_SIZE - 1);
+            var fromIndex = i * WebConstants.JPA_BATCH_INSERT_SIZE;
+            var toIndex = i == size - 1 ? roleMenuList.size() : (i + 1) * WebConstants.JPA_BATCH_INSERT_SIZE;
+            var list =  roleMenuList.subList(fromIndex, toIndex);
             var builder = new StringBuilder("insert into sys_role_menu(role_id, menu_id) values");
             IntStream.range(0, list.size()).forEach(index -> {
                 builder.append("(?, ?),");
@@ -118,6 +127,54 @@ public class SysRoleUserMenuServiceImpl implements SysRoleUserMenuService {
 
     @Override
     public void deleteRoleMenuByRoleIds(List<Integer> roleIds) {
-        this.menuRepository.deleteRoleMenuByRoleIds(roleIds);
+        this.roleMenuRepository.deleteRoleMenuByRoleIds(roleIds);
+    }
+
+    @Override
+    public List<Integer> getUserIdsByRoleId(String roleId) {
+        return this.roleUserRepository.getUserIdsByRoleId(roleId);
+    }
+
+    @Override
+    public List<Integer> getRolesByUserId(Integer userId) {
+        return this.roleUserRepository.getRolesByUserId(userId);
+    }
+
+    @Override
+    public void deleteRoleUserByRoleIds(List<Integer> roleIds) {
+        this.roleUserRepository.deleteRoleUserByRoleIds(roleIds);
+    }
+
+    @Override
+    @Transactional(rollbackOn = Exception.class)
+    public void batchInsertRoleUser(List<SysRoleUser> roleUserList) {
+        if (Detect.isNullOrEmpty(roleUserList)) {
+            return;
+        }
+        int size = roleUserList.size() % WebConstants.JPA_BATCH_INSERT_SIZE == 0 ? roleUserList.size() / WebConstants.JPA_BATCH_INSERT_SIZE : roleUserList.size() / WebConstants.JPA_BATCH_INSERT_SIZE + 1;
+        log.info("batch insert sys_role_user times: {}", size);
+        IntStream.range(0, size).forEach(i -> {
+            var fromIndex = i * WebConstants.JPA_BATCH_INSERT_SIZE;
+            var toIndex = i == size - 1 ? roleUserList.size() : (i + 1) * WebConstants.JPA_BATCH_INSERT_SIZE;
+            var list =  roleUserList.subList(fromIndex, toIndex);
+            var builder = new StringBuilder("insert into sys_role_user(role_id, user_id) values");
+            IntStream.range(0, list.size()).forEach(index -> {
+                builder.append("(?, ?),");
+            });
+            builder.deleteCharAt(builder.lastIndexOf(","));
+            //设置占位符值
+            int paramIndex = 1;
+            Query query = entityManager.createNativeQuery(builder.toString());
+            for (SysRoleUser roleUser: list) {
+                query.setParameter(paramIndex++, roleUser.getRoleId());
+                query.setParameter(paramIndex++, roleUser.getUserId());
+            }
+            query.executeUpdate();
+        });
+    }
+
+    @Override
+    public void deleteRoleUserByUserIds(List<Integer> userIds) {
+        this.roleUserRepository.deleteRoleUserByUserIds(userIds);
     }
 }

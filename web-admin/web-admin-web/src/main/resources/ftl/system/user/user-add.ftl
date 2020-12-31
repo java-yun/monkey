@@ -10,7 +10,7 @@
     <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/tools/tool.js"></script>
-    <script type="text/javascript" src="${re.contextPath}/plugin/js/common.js "charset="utf-8"></script>
+    <script type="text/javascript" src="${re.contextPath}/plugin/js/common.js " charset="utf-8"></script>
 </head>
 
 <body>
@@ -47,8 +47,7 @@
                     <span class="x-red">*</span>用户名
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="uname" name="username" lay-verify="username"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" id="uname" name="username" lay-verify="username" autocomplete="off" class="layui-input">
                 </div>
                 <div id="ms" class="layui-form-mid layui-word-aux">
                     <span class="x-red">*</span><span id="ums">将会成为您唯一的登入名</span>
@@ -68,8 +67,7 @@
                         <span class="x-red">*</span>年龄
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" id="age" name="age" lay-verify="number"
-                               autocomplete="off" class="layui-input">
+                        <input type="text" id="age" name="age" lay-verify="number" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -78,8 +76,7 @@
                     <span class="x-red">*</span>手机号
                 </label>
                 <div class="layui-input-block">
-                    <input type="text" id="mobile" value="" style="width: 93%" name="mobile" lay-verify="mobile"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" id="mobile" value="" style="width: 93%" name="mobile" lay-verify="mobile" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -87,14 +84,13 @@
                     <span class="x-red"></span>邮箱
                 </label>
                 <div class="layui-input-block">
-                    <input type="email" id="email" style="width: 93%" name="email" lay-verify="email"
-                           autocomplete="off" class="layui-input">
+                    <input type="email" id="email" style="width: 93%" name="email" lay-verify="email" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label for="mobile" class="layui-form-label">
-                    <span class="x-red">*</span>手机号
+                    <span class="x-red">*</span>角色
                 </label>
                 <div class="layui-input-block">
                     <#list boxJson as json>
@@ -103,7 +99,7 @@
                 </div>
             </div>
 
-            <input type="hidden" id="isLegalUserName" />
+            <input type="hidden" id="isLegalUserName"/>
 
         </div>
         <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;
@@ -121,27 +117,26 @@
     </form>
 </div>
 <script>
-    var flag, msg;
+    let flag, msg;
     $(function () {
         $('#uname').on("blur", function () {
-            var uname = $('#uname').val();
-            var unameRegExp = /^[a-zA-Z]{1}[a-zA-Z0-9]{3,11}$/
+            const uname = $('#uname').val();
+            const unameRegExp = /^[a-zA-Z]{1}[a-zA-Z0-9]{3,11}$/;
             if (!unameRegExp.test(uname)) {
                 $('#ms').append("<span style='color: red;'>4-12位字母和数字(字母开头)</span>");
                 $('#isLegalUserName').val("false");
                 return;
             }
-            if (uname != '') {
+            if (uname !== '') {
                 $.ajax({
                     url: 'checkUser?uname=' + uname, async: false, type: 'get', success: function (data) {
                         $('#ms').find('span').remove();
-                        if (data.code == '000000' && data.data == 'true') {
+                        if (data.code === '000000' && data.data) {
                             $('#ms').append("<span style='color: green;'>用户名可用</span>");
                             $('#isLegalUserName').val("true");
-                        }else if(data.code == '000000' && data.data == 'false'){
+                        } else if (data.code === '000000' && !data.data) {
                             $('#ms').append("<span style='color: red;'>用户名存在</span>");
                             $('#isLegalUserName').val("false");
-                            return;
                         } else {
                             msg = data.msg;
                             $('#ms').append("<span style='color: red;'>" + data.msg + "</span>");
@@ -157,12 +152,10 @@
 
     });
 
-    var type;
+    let type;
     layui.use(['form', 'layer', 'upload'], function () {
-        $ = layui.jquery;
-        var form = layui.form
-                , layer = layui.layer,
-                upload = layui.upload;
+        const $ = layui.jquery;
+        const form = layui.form, layer = layui.layer, upload = layui.upload;
 
         if ('${currentUser.type}' == 2) {
             $("#usertype").hide();
@@ -179,7 +172,7 @@
                     $('#demo2').append('<img src="' + result + '" alt="' + file.name + '" width="100px" height="100px" class="layui-upload-img layui-circle">');
                 });
             }, done: function (res) {
-                if (res.code != '000000') {
+                if (res.code !== '000000') {
                     layer.msg(res.msg, {icon: 5, anim: 6});
                 } else {
                     $("#photo").val(res.data);
@@ -191,34 +184,33 @@
         //自定义验证规则
         form.verify({
             username: function (value) {
-                debugger;
-                var unameRegExp = /^[a-zA-Z]{1}[a-zA-Z0-9]{3,11}$/
+                const unameRegExp = /^[a-zA-Z][a-zA-Z0-9]{3,11}$/;
                 if (!unameRegExp.test(value)) {
                     return '4-12位字母和数字(字母开头)';
                 }
-                if($('#isLegalUserName').val() == 'false'){
+                if ($('#isLegalUserName').val() === 'false') {
                     return '用户名不可用';
                 }
             }
             , password: [/(.+){6,12}$/, '密码必须6到12位']
 
             , repass: function (value) {
-                if ($('#password').val() != $('#l_repass').val()) {
+                if ($('#password').val() !== $('#l_repass').val()) {
                     return '两次密码不一致';
                 }
             }
             , email: function (value) {
-                if (value != "") {
+                if (value !== "") {
                     if (!/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)) {
                         return "邮箱格式不正确";
                     }
                 }
             }
             , mobile: function (value) {
-                if (value.trim() == "") {
+                if (value.trim() === "") {
                     return "手机号不能为空"
                 }
-                if (value != "") {
+                if (value !== "") {
                     if (!/(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/.test(value)) {
                         return "手机号格式不正确";
                     }
@@ -227,24 +219,24 @@
         });
 
         $('#close').click(function () {
-            var index = parent.layer.getFrameIndex(window.name);
+            const index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
         });
 
         form.on('radio(userType)', function (data) {
             type = data.value;
-            if (data.value == 1) {
+            if (data.value === 1) {
                 $("#cpdiv").hide();
-            } else if (data.value == 2) {
+            } else if (data.value === 2) {
                 $("#cpdiv").show();
             }
         });
 
         //监听提交
         form.on('submit(add)', function (data) {
-            var r = document.getElementsByName("role");
-            var role = [];
-            for (var i = 0; i < r.length; i++) {
+            const r = document.getElementsByName("role");
+            const role = [];
+            for (let i = 0; i < r.length; i++) {
                 if (r[i].checked) {
                     console.info(r[i].value);
                     role.push(r[i].value);
@@ -252,7 +244,7 @@
             }
             data.field.role = role;
 
-            if (type == 1) {
+            if (type === 1) {
                 data.field.cpId = "";
             }
             layerAjax('addUser', data.field, 'dataList');

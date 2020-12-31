@@ -5,7 +5,7 @@ Time: 12:40
 To change this template use File | Settings | File Templates.-->
 
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">

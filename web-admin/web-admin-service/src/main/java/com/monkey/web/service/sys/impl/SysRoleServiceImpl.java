@@ -1,5 +1,6 @@
 package com.monkey.web.service.sys.impl;
 
+import com.monkey.common.utils.BeanCopyUtils;
 import com.monkey.common.utils.Detect;
 import com.monkey.web.dao.SysRoleRepository;
 import com.monkey.web.entity.SysRole;
@@ -38,22 +39,16 @@ public class SysRoleServiceImpl implements SysRoleService {
     }
 
     @Override
-    public List<SysRole> getRoleList(RoleRequest request) {
+    public Page<SysRole> getRoleListWithPage(RoleRequest request) {
         var matcher = ExampleMatcher.matching()
                 .withMatcher("roleName", ExampleMatcher.GenericPropertyMatcher::contains)
                 .withMatcher("description", ExampleMatcher.GenericPropertyMatcher::contains);
         var sysRole = new SysRole();
         BeanUtils.copyProperties(request, sysRole);
         var example = Example.of(sysRole, matcher);
-        if (Objects.nonNull(request.getPage())) {
-            //jpa分页是从零开始的
-            int page = request.getPage() <= 0 ? 0 : request.getPage() - 1;
-            var pageable = PageRequest.of(page, request.getLimit(), Sort.by(Sort.Direction.DESC, "createTime"));
-            Page<SysRole> result = this.sysRoleRepository.findAll(example, pageable);
-            return result.toList();
-        } else {
-            return this.sysRoleRepository.findAll(example, Sort.by(Sort.Direction.DESC, "createTime"));
-        }
+        int page = request.getPage() <= 0 ? 0 : request.getPage() - 1;
+        var pageable = PageRequest.of(page, request.getLimit(), Sort.by(Sort.Direction.DESC, "createTime"));
+        return this.sysRoleRepository.findAll(example, pageable);
     }
 
     @Override
@@ -70,29 +65,37 @@ public class SysRoleServiceImpl implements SysRoleService {
             //新增
             role.setCreateUser(username);
             role.setCreateTime(date);
+            role.setUpdateUser(username);
+            role.setUpdateTime(date);
+            this.sysRoleRepository.save(role);
+        } else {
+            //更新
+            var sysRole = this.selectById(role.getId());
+            BeanCopyUtils.beanCopyWithIgnore(role, sysRole);
+            role.setUpdateUser(username);
+            role.setUpdateTime(date);
+            this.sysRoleRepository.saveAndFlush(sysRole);
         }
-        role.setUpdateUser(username);
-        role.setUpdateTime(date);
-        this.sysRoleRepository.save(role);
-        //TODO 主键返回
         //查询角色菜单信息
         var existsMenuIds = this.sysRoleUserMenuService.getMenuIdsByRoleId(role.getId());
-        var newMenuIds = List.of(menuIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
-        //要删除的角色菜单中间表的菜单id
-        var delMenuIds = existsMenuIds.stream().filter(menuId -> !newMenuIds.contains(menuId)).collect(Collectors.toList());
-        //要添加的角色菜单中间表数据
-        var roleMenuList = newMenuIds.stream().filter(menuId -> !existsMenuIds.contains(menuId)).map(menuId -> {
-            var sysRoleMenu = new SysRoleMenu();
-            sysRoleMenu.setMenuId(menuId);
-            sysRoleMenu.setRoleId(role.getId());
-            return sysRoleMenu;
-        }).collect(Collectors.toList());
+        if (Detect.isNotNullOrEmpty(menuIds)) {
+            var newMenuIds = List.of(menuIds.split(",")).stream().map(Integer::parseInt).collect(Collectors.toList());
+            //要删除的角色菜单中间表的菜单id
+            var delMenuIds = existsMenuIds.stream().filter(menuId -> !newMenuIds.contains(menuId)).collect(Collectors.toList());
+            //要添加的角色菜单中间表数据
+            var roleMenuList = newMenuIds.stream().filter(menuId -> !existsMenuIds.contains(menuId)).map(menuId -> {
+                var sysRoleMenu = new SysRoleMenu();
+                sysRoleMenu.setMenuId(menuId);
+                sysRoleMenu.setRoleId(role.getId());
+                return sysRoleMenu;
+            }).collect(Collectors.toList());
 
-        if (Detect.isNotNullOrEmpty(delMenuIds)) {
-            this.sysRoleUserMenuService.deleteRoleMenuByMenuIds(delMenuIds);
-        }
-        if (Detect.isNotNullOrEmpty(roleMenuList)) {
-            this.sysRoleUserMenuService.batchInsertRoleMenu(roleMenuList);
+            if (Detect.isNotNullOrEmpty(delMenuIds)) {
+                this.sysRoleUserMenuService.deleteRoleMenuByMenuIds(delMenuIds);
+            }
+            if (Detect.isNotNullOrEmpty(roleMenuList)) {
+                this.sysRoleUserMenuService.batchInsertRoleMenu(roleMenuList);
+            }
         }
     }
 
@@ -106,5 +109,16 @@ public class SysRoleServiceImpl implements SysRoleService {
         this.sysRoleRepository.deleteByIds(roleIds);
         //删除中间表数据
         this.sysRoleUserMenuService.deleteRoleMenuByRoleIds(roleIds);
+    }
+
+    @Override
+    public List<SysRole> getRoleList(RoleRequest request) {
+        var matcher = ExampleMatcher.matching()
+                .withMatcher("roleName", ExampleMatcher.GenericPropertyMatcher::contains)
+                .withMatcher("description", ExampleMatcher.GenericPropertyMatcher::contains);
+        var sysRole = new SysRole();
+        BeanUtils.copyProperties(request, sysRole);
+        var example = Example.of(sysRole, matcher);
+        return this.sysRoleRepository.findAll(example);
     }
 }

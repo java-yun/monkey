@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <title>用户管理</title>
     <#include "/common/head.ftl" />
@@ -41,16 +41,16 @@
     </div>
     <div class="layui-card-body">
         <div style="padding-bottom: 10px;">
-        <@shiro.hasPermission name="user:add">
-            <button class="layui-btn opt-btn layui-btn-sm" data-type="add">
-                添加
-            </button>
-        </@shiro.hasPermission>
-        <@shiro.hasPermission name="user:del">
-            <button class="layui-btn opt-btn layui-btn-sm layui-btn-danger" data-type="delete">
-                批量删除
-            </button>
-        </@shiro.hasPermission>
+            <@shiro.hasPermission name="user:add">
+                <button class="layui-btn opt-btn layui-btn-sm" data-type="add">
+                    添加
+                </button>
+            </@shiro.hasPermission>
+            <@shiro.hasPermission name="user:del">
+                <button class="layui-btn opt-btn layui-btn-sm layui-btn-danger" data-type="delete">
+                    批量删除
+                </button>
+            </@shiro.hasPermission>
         </div>
         <table id="dataList" class="layui-hide" lay-filter="dataList"></table>
     </div>

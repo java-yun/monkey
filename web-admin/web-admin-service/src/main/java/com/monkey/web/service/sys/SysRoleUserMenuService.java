@@ -3,6 +3,7 @@ package com.monkey.web.service.sys;
 import com.monkey.web.entity.SysMenu;
 import com.monkey.web.entity.SysRole;
 import com.monkey.web.entity.SysRoleMenu;
+import com.monkey.web.entity.SysRoleUser;
 
 import java.util.List;
 
@@ -51,6 +52,12 @@ public interface SysRoleUserMenuService {
     List<Integer> getMenuIdsByRoleId(Integer roleId);
 
     /**
+     * 根据  menuId 删除
+     * @param menuId menuId
+     */
+    void deleteRoleMenuByMenuId(Integer menuId);
+
+    /**
      * 删除角色菜单  根据菜单ids
      * @param menuIds menuIds
      */
@@ -67,4 +74,36 @@ public interface SysRoleUserMenuService {
      * @param roleIds roleIds
      */
     void deleteRoleMenuByRoleIds(List<Integer> roleIds);
+
+    /**
+     * 根据角色查询用户ids
+     * @param roleId roleId
+     * @return List<Integer>
+     */
+    List<Integer> getUserIdsByRoleId(String roleId);
+
+    /**
+     * 根据 userId 查询 roleIds
+     * @param userId
+     * @return List<Integer>
+     */
+    List<Integer> getRolesByUserId(Integer userId);
+
+    /**
+     * 删除 RoleUser 根据 roleIds
+     * @param roleIds roleIds
+     */
+    void deleteRoleUserByRoleIds(List<Integer> roleIds);
+
+    /**
+     * 批量添加  RoleUser
+     * @param roleUserList roleUserList
+     */
+    void batchInsertRoleUser(List<SysRoleUser> roleUserList);
+
+    /**
+     * 根据 userIds 删除 RoleUser
+     * @param userIds userIds
+     */
+    void deleteRoleUserByUserIds(List<Integer> userIds);
 }

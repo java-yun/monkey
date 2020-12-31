@@ -5,15 +5,14 @@ Time: 10:00
 To change this template use File | Settings | File Templates.-->
 
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta charset="UTF-8">
     <title>编辑角色</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
     <link rel="stylesheet" href="${re.contextPath}/plugin/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="${re.contextPath}/plugin/x-admin/css/xadmin.css">
@@ -34,14 +33,14 @@ To change this template use File | Settings | File Templates.-->
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var flag = '${detail}';
+            const flag = '${detail}';
             if (flag) {
                 $("form").disable();
             }
         });
     </script>
     <script type="text/javascript">
-        var setting = {
+        const setting = {
             check: {
                 enable: true
             },
@@ -51,7 +50,7 @@ To change this template use File | Settings | File Templates.-->
                 }
             }
         };
-        var zNodes =${menus};
+        let zNodes = ${menus};
         $(document).ready(function () {
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         });
@@ -66,7 +65,7 @@ To change this template use File | Settings | File Templates.-->
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
-            var flag = '${detail}';
+            const flag = '${detail}';
             if (flag) {
                 $("form").disable();
             }
@@ -89,9 +88,7 @@ To change this template use File | Settings | File Templates.-->
                 </label>
                 <div class="layui-input-inline">
                     <input value="${role.id}" type="hidden" name="id">
-                    <input type="text" value="${role.roleName}" id="roleName" name="roleName"
-                           lay-verify="roleName"
-                           autocomplete="off" class="layui-input">
+                    <input type="text" value="${role.roleName}" id="roleName" name="roleName" lay-verify="roleName" autocomplete="off" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -100,8 +97,7 @@ To change this template use File | Settings | File Templates.-->
                         角色描述
                     </label>
                     <div class="layui-input-inline">
-                        <input type="text" value="${role.description}" id="description" name="description" autocomplete="off"
-                               class="layui-input">
+                        <input type="text" value="${role.description}" id="description" name="description" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -123,63 +119,61 @@ To change this template use File | Settings | File Templates.-->
             </div>
             <div style="height: 60px"></div>
         </div>
-  <#if !detail>
-    <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;
+        <#if !detail>
+            <div style="width: 100%;height: 55px;background-color: white;border-top:1px solid #e6e6e6;
   position: fixed;bottom: 1px;margin-left:-20px;">
-        <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
+                <div class="layui-form-item" style=" float: right;margin-right: 30px;margin-top: 8px">
 
-            <button class="layui-btn layui-btn-normal" lay-filter="add" lay-submit>
-                确认
-            </button>
-            <button class="layui-btn layui-btn-primary" id="close">
-                取消
-            </button>
-        </div>
-    </div>
-  </#if>
+                    <button class="layui-btn layui-btn-normal" lay-filter="add" lay-submit>
+                        确认
+                    </button>
+                    <button class="layui-btn layui-btn-primary" id="close">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </#if>
     </form>
 </div>
 <script>
     layui.use(['form', 'layer'], function () {
-        $ = layui.jquery;
-        var form = layui.form
-                , layer = layui.layer;
+        const $ = layui.jquery;
+        const form = layui.form, layer = layui.layer;
 
         //自定义验证规则
         form.verify({
             roleName: function (value) {
-                if (value.trim() == "") {
+                if (value.trim() === "") {
                     return "角色名不能为空";
                 }
             }
         });
 
         $('#close').click(function () {
-            var index = parent.layer.getFrameIndex(window.name);
+            const index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
         });
         //监听提交
         form.on('submit(add)', function (data) {
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-            var jsonArr = zTree.getCheckedNodes(true);
-            var menus = [];
-            for (var item in jsonArr) {
+            const zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            const jsonArr = zTree.getCheckedNodes(true);
+            const menus = [];
+            for (const item in jsonArr) {
                 menus.push(jsonArr[item].id);
             }
             data.field.menus = menus.join(",");
-            var loading = honglu.dialog.load();
+            const loading = honglu.dialog.load();
             honglu.ajax.post('${re.contextPath}/role/updateRole', data.field, function (result) {
                 honglu.dialog.close(loading);
-                if (result.code == '000000') {
-                    var index = parent.layer.getFrameIndex(window.name);
+                if (result.code === '000000') {
+                    const index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
+                    window.top.layer.msg(result.msg, {icon: 6, anim: 2});
                     window.parent.layui.table.reload('roleList');
-                    window.top.layer.msg(result.msg, {icon: 6, offset: 'rb', area: ['120px', '80px'], anim: 2});
                 } else {
-                    layer.msg(result.msg, {icon: 5, offset: 'rb', area: ['120px', '80px'], anim: 2});
+                    layer.msg(result.msg, {icon: 5, anim: 2});
                 }
             });
-
             // layerAjax('updateRole', data.field, 'roleList');
             return false;
         });

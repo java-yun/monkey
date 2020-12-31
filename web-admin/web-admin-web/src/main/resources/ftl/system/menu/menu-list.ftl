@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
     <meta charset="utf-8">
@@ -60,7 +60,7 @@
                 success: function (data) {
                     layer.close(index);
                     if (data.code === '000000') {
-                        //window.top.layer.msg(data.msg,{icon:6,anim:2});
+                        window.top.layer.msg(data.msg,{icon:6,anim:2});
                         location.href = "showMenu";
                     } else {
                         window.top.layer.msg('请求失败', {icon: 5, anim: 2});

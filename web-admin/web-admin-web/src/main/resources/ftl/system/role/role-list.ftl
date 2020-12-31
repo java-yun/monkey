@@ -5,7 +5,7 @@
  To change this template use File | Settings | File Templates.
  角色管理-->
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <title>角色管理</title>
@@ -111,7 +111,7 @@
                 {checkbox: true, fixed: true, width: '5%'},
                 {field: 'roleName', title: '角色名称', width: '20%', sort: true},
                 {field: 'description', title: '角色描述', width: '20%', sort: true},
-                {field: 'createDate', title: '创建时间', width: '20%', templet: '<div>{{ layui.laytpl.toDateString(d.createDate,"yyyy-MM-dd") }}</div>'},
+                {field: 'createDate', title: '创建时间', width: '20%', template: '<div>{{ layui.laytpl.toDateString(d.createDate) }}</div>'},
                 {field: 'id', title: '操作', width: '20%', toolbar: "#toolBar"}
             ]],
             page: true,
@@ -200,17 +200,17 @@
 
     });
 
-    function del(id) {
+    function del(ids) {
         $.ajax({
             url: "del",
             type: "post",
-            data: {id: id},
+            data: {ids: ids},
             success: function (d) {
                 if (d.code === '000000') {
-                    layer.msg(d.msg, {icon: 1});
+                    layer.msg(d.msg, {icon: 6, anim: 2});
                     layui.table.reload('roleList');
                 } else {
-                    layer.msg(d.msg, {icon: 2});
+                    layer.msg(d.msg, {icon: 5, anim: 2});
                 }
             }
         });
