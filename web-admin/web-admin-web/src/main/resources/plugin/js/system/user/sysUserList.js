@@ -25,7 +25,6 @@
                 },
                 del: {
                     invoke: function (obj) {
-                        debugger;
                         const msg = '确定删除[<label style="color: #00AA91;">' + obj.realName + '</label>]?';
                         const url = getCtxPath() + '/user/del';
                         honglu.dialog.confirm(msg, function () {
@@ -59,9 +58,9 @@
                     {field: 'roleName', title: '角色', width: '10%', align: 'center'},
                     {field: 'age', title: '年龄', width: '10%', align: 'center'},
                     {field: 'email', title: '邮箱', width: '10%', align: 'center'},
-                    {field: 'createBy', title: '创建人', width: '10%', align: 'center'},
-                    {field: 'createDate', title: '创建时间', width: '10%', align: 'center', template: '<div>{{ honglu.util.dateFormat(d.createDate) }}</div>'},
-                    {field: 'updateDate', title: '更新时间', width: '10%', align: 'center', template: '<div>{{ honglu.util.dateFormat(d.updateDate) }}</div>'},
+                    {field: 'createUser', title: '创建人', width: '10%', align: 'center'},
+                    {field: 'createTime', title: '创建时间', width: '10%', align: 'center', templet: '<div>{{ layui.laytpl.toDateString(d.createTime) }}</div>'},
+                    {field: 'updateTime', title: '更新时间', width: '10%', align: 'center', templet: '<div>{{ layui.laytpl.toDateString(d.updateTime) }}</div>'},
                     {field: 'right', fixed: 'right', title: '操作', width: '20%', align: 'center', toolbar: "#barDemo"}
                 ]]
             }

@@ -98,11 +98,23 @@ public class RedisRepository {
     /**
      * set if not exists
      * @param key key
-     * @param value time
+     * @param value value
      * @return true 设值成功， false 设值失败
      */
     public Boolean setNx(String key, String value) {
         return this.stringRedisTemplate.opsForValue().setIfAbsent(key, value);
+    }
+
+    /**
+     * set if not exists with expire
+     * @param key key
+     * @param value value
+     * @param timeout timeout
+     * @param timeUnit timeUnit
+     * @return true 设值成功， false 设值失败
+     */
+    public Boolean setNx(String key, String value, long timeout, TimeUnit timeUnit) {
+        return this.stringRedisTemplate.opsForValue().setIfAbsent(key, value, timeout, timeUnit);
     }
 
     /**
@@ -122,4 +134,14 @@ public class RedisRepository {
     public Long getExpire(String key) {
         return this.stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
+
+    /**
+     * 发布消息
+     * @param channel 频道
+     * @param message 消息
+     */
+    public void convertAndSend(String channel, Object message) {
+        this.stringRedisTemplate.convertAndSend(channel, message);
+    }
+
 }

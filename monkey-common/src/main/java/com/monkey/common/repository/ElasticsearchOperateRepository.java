@@ -5,21 +5,25 @@ import com.monkey.common.code.BizCode;
 import com.monkey.common.exception.SystemException;
 import com.monkey.common.utils.ElasticsearchUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.bulk.BackoffPolicy;
 import org.elasticsearch.action.bulk.BulkProcessor;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.ByteSizeUnit;
 import org.elasticsearch.common.unit.ByteSizeValue;
 import org.elasticsearch.common.unit.TimeValue;
@@ -89,9 +93,7 @@ public class ElasticsearchOperateRepository {
         request.aliases(indexAlias);
         var response = this.client.indices().getAlias(request, RequestOptions.DEFAULT);
         var aliases = response.getAliases();
-        aliases.forEach((indexName, aliasMetaData) -> {
-            list.add(indexName);
-        });
+        aliases.forEach((indexName, aliasMetaData) -> list.add(indexName));
         return list;
     }
 
@@ -150,9 +152,7 @@ public class ElasticsearchOperateRepository {
                 var hasFailures = bulkResponse.hasFailures();
                 log.info("---insert {} pieces of data successfully, executionId: {}, hasFailures: {}----", bulkRequest.numberOfActions(), executionId, hasFailures);
                 if (hasFailures) {
-                    bulkResponse.forEach(itemResponse -> {
-                        log.error("fail message: {}", itemResponse.getFailureMessage());
-                    });
+                    bulkResponse.forEach(itemResponse -> log.error("fail message: {}", itemResponse.getFailureMessage()));
                 }
             }
 
@@ -167,11 +167,11 @@ public class ElasticsearchOperateRepository {
                 //达到刷新的大小
                 .setBulkSize(new ByteSizeValue(10, ByteSizeUnit.MB))
                 //固定刷新的时间频率
-                .setFlushInterval(TimeValue.timeValueSeconds(5))
+                .setFlushInterval(TimeValue.timeValueSeconds(5L))
                 //并发线程数
-                .setConcurrentRequests(2)
+                .setConcurrentRequests(4)
                 //重试补偿策略
-                .setBackoffPolicy(BackoffPolicy.exponentialBackoff(TimeValue.timeValueMillis(100), 3))
+                .setBackoffPolicy(BackoffPolicy.constantBackoff(TimeValue.timeValueSeconds(1L), 3))
                 .build();
     }
 
@@ -203,5 +203,26 @@ public class ElasticsearchOperateRepository {
         RefreshRequest request = new RefreshRequest(indices);
         RefreshResponse response = this.client.indices().refresh(request, RequestOptions.DEFAULT);
         return response.getStatus();
+    }
+
+    /**
+     * 重置索引settings
+     * @param settings settings
+     * @param indexName indexName
+     */
+    public void setSettings(Settings settings, String indexName) {
+        UpdateSettingsRequest request = new UpdateSettingsRequest(indexName);
+        request.settings(settings);
+        this.client.indices().putSettingsAsync(request, RequestOptions.DEFAULT, new ActionListener<>() {
+            @Override
+            public void onResponse(AcknowledgedResponse response) {
+                log.info("reset index settings success? {}", response.isAcknowledged());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                log.error("reset index settings fail", e);
+            }
+        });
     }
 }

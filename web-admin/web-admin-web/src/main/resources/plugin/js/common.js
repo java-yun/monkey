@@ -1,28 +1,28 @@
 function getCtxPath() {
-    var curWwwPath = window.document.location.href;
-    var pathName = window.document.location.pathname;
-    var pos = curWwwPath.indexOf(pathName);
-    var localhostPath = curWwwPath.substring(0, pos);
-    var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+    const curWwwPath = window.document.location.href;
+    const pathName = window.document.location.pathname;
+    const pos = curWwwPath.indexOf(pathName);
+    const localhostPath = curWwwPath.substring(0, pos);
+    const projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
     //return (localhostPath + projectName);
     return localhostPath;
 }
 
 // 请求到后台Controller
-var hostIp = getCtxPath();
+const hostIp = getCtxPath();
 //时间格式化，时间为null、undefined时，返回当前时间
 layui.laytpl.toDateString = function (d, format) {
-    var date = new Date(d || new Date())
-        , ymd = [
-        this.digit(date.getFullYear(), 4)
-        , this.digit(date.getMonth() + 1)
-        , this.digit(date.getDate())
-    ]
-        , hms = [
-        this.digit(date.getHours())
-        , this.digit(date.getMinutes())
-        , this.digit(date.getSeconds())
-    ];
+    const date = new Date(d || new Date()),
+        ymd = [
+            this.digit(date.getFullYear(), 4),
+            this.digit(date.getMonth() + 1),
+            this.digit(date.getDate())
+        ],
+        hms = [
+            this.digit(date.getHours()),
+            this.digit(date.getMinutes()),
+            this.digit(date.getSeconds())
+        ];
 
     format = format || 'yyyy-MM-dd HH:mm:ss';
 
@@ -36,37 +36,18 @@ layui.laytpl.toDateString = function (d, format) {
 
 //时间格式化，时间为null、undefined时，返回空串
 layui.laytpl.toDateStringWithBlank = function (timeStamp, format) {
-    if (timeStamp == null || timeStamp == undefined || timeStamp == "") {
+    if (timeStamp == null || timeStamp === "") {
         return "";
     }
-    var date = new Date(timeStamp || new Date())
-        , ymd = [
-        this.digit(date.getFullYear(), 4)
-        , this.digit(date.getMonth() + 1)
-        , this.digit(date.getDate())
-    ]
-        , hms = [
-        this.digit(date.getHours())
-        , this.digit(date.getMinutes())
-        , this.digit(date.getSeconds())
-    ];
-
-    format = format || 'yyyy-MM-dd HH:mm:ss';
-
-    return format.replace(/yyyy/g, ymd[0])
-        .replace(/MM/g, ymd[1])
-        .replace(/dd/g, ymd[2])
-        .replace(/HH/g, hms[0])
-        .replace(/mm/g, hms[1])
-        .replace(/ss/g, hms[2]);
+    return layui.laytpl.toDateString(timeStamp, format);
 };
 
 //数字前置补零
 layui.laytpl.digit = function (num, length, end) {
-    var str = '';
+    let str = '';
     num = String(num);
     length = length || 2;
-    for (var i = num.length; i < length; i++) {
+    for (let i = num.length; i < length; i++) {
         str += '0';
     }
     return num < Math.pow(10, length) ? str + (num | 0) : num;
@@ -74,17 +55,17 @@ layui.laytpl.digit = function (num, length, end) {
 
 // 回车提交表单
 document.onkeydown = function (e) {
-    var theEvent = window.event || e;
-    var code = theEvent.keyCode || theEvent.which;
-    if (code == 13) {
+    const theEvent = window.event || e;
+    const code = theEvent.keyCode || theEvent.which;
+    if (code === 13) {
         $(".select .select-on").click();
     }
 }
-var enumJsons = new Object();
+let enumJsons = {};
 
 function initEnum(dicBigCode) {
     // 用于加载一次分页数据字典
-    if (dicBigCode == "" || dicBigCode == null || dicBigCode == undefined) {
+    if (dicBigCode === "" || dicBigCode == null) {
         alert("大类code为空！");
         return;
     }
@@ -114,7 +95,7 @@ function initEnum(dicBigCode) {
 function initDicSmall(dicBigCode, loadId) {
     // 因为是list集合里是json，需要嵌套循环
     $.each(enumJsons, function (k, v) {
-        if (v.dicCode == dicBigCode) {
+        if (v.dicCode === dicBigCode) {
             // 填充下拉框内容
             $("#" + loadId).append("<option value='" + v.value + "'>" + v.name + "</option>");
         }
@@ -130,12 +111,12 @@ function initDicSmall(dicBigCode, loadId) {
  * @returns
  */
 function getEnum(dicBigCode, enumVal) {
-    var enums = "";
+    let enums = "";
     // 因为是list集合里是json，需要嵌套循环
     $.each(enumJsons, function (k, v) {
         // 转型为字符串
-        var value1 = (v.dicCode + "" + v.value);
-        var value2 = (dicBigCode + "" + enumVal);
+        const value1 = (v.dicCode + "" + v.value);
+        const value2 = (dicBigCode + "" + enumVal);
         // 匹配枚举
         if (value1 == value2) {
 //				// 获取枚举值
@@ -144,38 +125,40 @@ function getEnum(dicBigCode, enumVal) {
     });
     return enums;
 }
+
 /**
  * 获取枚举值
  * @param dicBigCode 需要枚举的值
  * @returns
  */
 function getGameEnum(dicBigCode) {
-    var enums = "";
+    let enums = "";
     // 因为是list集合里是json，需要嵌套循环
     $.each(enumJson, function (k, v) {
         // 转型为字符串
-        var value1 = (v.code + "");
-        var value2 = (dicBigCode + "");
+        const value1 = (v.code + "");
+        const value2 = (dicBigCode + "");
         // 匹配枚举
-        if (value1 == value2) {
+        if (value1 === value2) {
 //				// 获取枚举值
             enums = v.name + "";
         }
     });
     return enums;
 }
+
 /**
  * 获取枚举值
  * @param appId 需要枚举的值
  * @returns
  */
 function getAppIdEnum(appId) {
-    var enums = "";
+    let enums = "";
     // 因为是list集合里是json，需要嵌套循环
     $.each(enumJson, function (k, v) {
         // 转型为字符串
-        var value1 = (v.id + "");
-        var value2 = (appId + "");
+        const value1 = (v.id + "");
+        const value2 = (appId + "");
         // 匹配枚举
         if (value1 == value2) {
 //				// 获取枚举值
@@ -192,24 +175,24 @@ function getAppIdEnum(appId) {
  * @returns
  */
 function formFileDownload(url, params) {
-	if (params != undefined && !$.isEmptyObject(params)) {
-		var form = $("#downloadForm");
-		if (form.length == 0) {
-			//构造一个form
-			form = $("<form>")
-			$("body").append(form);//将表单放置在web中
-			form.attr("style", "display:none");
-			form.attr("id", "downloadForm");
-			form.attr("target", "downLoadTarget");
-			form.attr("method", "post");//请求类型
-			form.attr("action", url);//请求地址
-		}
-		for ( var key in params) {
-			form.append(fittingInput(key, params[key]));
-		}
-		form.submit();//表单提交
-		console.log("form 提交成功");
-	}
+    if (params !== undefined && !$.isEmptyObject(params)) {
+        let form = $("#downloadForm");
+        if (form.length === 0) {
+            //构造一个form
+            form = $("<form>")
+            $("body").append(form);//将表单放置在web中
+            form.attr("style", "display:none");
+            form.attr("id", "downloadForm");
+            form.attr("target", "downLoadTarget");
+            form.attr("method", "post");//请求类型
+            form.attr("action", url);//请求地址
+        }
+        for (const key in params) {
+            form.append(fittingInput(key, params[key]));
+        }
+        form.submit();//表单提交
+        console.log("form 提交成功");
+    }
 }
 
 /**
@@ -219,7 +202,7 @@ function formFileDownload(url, params) {
  * @returns
  */
 function fittingInput(nameObj, valueObj) {
-    var inputObj = $("<input>");
+    const inputObj = $("<input>");
     inputObj.attr("type", "hidden");
     inputObj.attr("name", nameObj);
     inputObj.attr("value", valueObj);

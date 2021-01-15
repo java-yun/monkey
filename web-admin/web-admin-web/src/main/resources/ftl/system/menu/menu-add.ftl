@@ -13,7 +13,8 @@ To change this template use File | Settings | File Templates.-->
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
-    <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="${re.contextPath}/plugin/x-admin/css/xadmin.css">
+    <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/">
     <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
 </head>
@@ -30,7 +31,7 @@ To change this template use File | Settings | File Templates.-->
             <div style="margin-left:25%">
                 <div class="layui-form-item">
                     <label for="menuType" class="layui-form-label">
-                        <span class="x-red">*</span>类型
+                        <span class="x-red">* </span>类型
                     </label>
                     <div class="layui-input-block" style="width:190px;">
                         <select name="menuType" id="menuType" lay-verify="menuType" lay-filter="menuType">
@@ -64,13 +65,13 @@ To change this template use File | Settings | File Templates.-->
                 </div>
                 <div class="layui-form-item">
                     <label for="name" class="layui-form-label">
-                        <span class="x-red">*</span>名称
+                        <span class="x-red">* </span>名称
                     </label>
                     <div class="layui-input-inline">
                         <input type="text" id="name" name="name" lay-verify="name" autocomplete="off" class="layui-input">
                     </div>
                     <div id="ms" class="layui-form-mid layui-word-aux">
-                        <span class="x-red">*</span><span id="ums">必须填写</span>
+                        <span class="x-red">* </span><span id="ums">必须填写</span>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -83,7 +84,7 @@ To change this template use File | Settings | File Templates.-->
                 </div>
                 <div class="layui-form-item">
                     <label for="permission" class="layui-form-label">
-                        <span class="x-red">*</span>权限
+                        <span class="x-red">* </span>权限
                     </label>
                     <div class="layui-input-inline">
                         <input type="text" id="permission" name="permission" lay-verify="permission" autocomplete="off" class="layui-input">
@@ -91,7 +92,7 @@ To change this template use File | Settings | File Templates.-->
                 </div>
                 <div class="layui-form-item">
                     <label for="icon" class="layui-form-label">
-                        <span class="x-red">*</span>图标
+                        <span class="x-red">* </span>图标
                     </label>
                     <div class="layui-input-inline">
                         <div style="margin-left: 20px;margin-top:5px">
@@ -104,7 +105,7 @@ To change this template use File | Settings | File Templates.-->
                 </div>
                 <div class="layui-form-item">
                     <label for="orderNum" class="layui-form-label">
-                        <span class="x-red">*</span>序号
+                        <span class="x-red">* </span>序号
                     </label>
                     <div class="layui-input-inline">
                         <input type="orderNum" id="orderNum" name="orderNum" lay-verify="orderNum" autocomplete="off" class="layui-input">

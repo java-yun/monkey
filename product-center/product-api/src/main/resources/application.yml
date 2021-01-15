@@ -93,3 +93,7 @@ logging:
 log:
   mdc:
     open: true
+
+monkey:
+  product:
+    parallel: 10

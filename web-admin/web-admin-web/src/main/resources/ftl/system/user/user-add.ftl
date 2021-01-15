@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="${re.contextPath}/plugin/x-admin/css/xadmin.css">
     <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js" charset="utf-8"></script>
     <script type="text/javascript" src="${re.contextPath}/plugin/tools/tool.js"></script>
@@ -44,19 +45,19 @@
             </div>
             <div class="layui-form-item">
                 <label for="uname" class="layui-form-label">
-                    <span class="x-red">*</span>用户名
+                    <span class="x-red">* </span>用户名
                 </label>
                 <div class="layui-input-inline">
                     <input type="text" id="uname" name="username" lay-verify="username" autocomplete="off" class="layui-input">
                 </div>
                 <div id="ms" class="layui-form-mid layui-word-aux">
-                    <span class="x-red">*</span><span id="ums">将会成为您唯一的登入名</span>
+                    <span class="x-red">* </span><span id="ums">将会成为您唯一的登入名</span>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label for="realName" class="layui-form-label">
-                        <span class="x-red">*</span>真实姓名
+                        <span class="x-red">* </span>真实姓名
                     </label>
                     <div class="layui-input-inline">
                         <input type="text" id="realName" name="realName" lay-verify="realName" autocomplete="off" class="layui-input">
@@ -64,7 +65,7 @@
                 </div>
                 <div class="layui-inline">
                     <label for="age" class="layui-form-label">
-                        <span class="x-red">*</span>年龄
+                        <span class="x-red">* </span>年龄
                     </label>
                     <div class="layui-input-inline">
                         <input type="text" id="age" name="age" lay-verify="number" autocomplete="off" class="layui-input">
@@ -73,7 +74,7 @@
             </div>
             <div class="layui-form-item">
                 <label for="mobile" class="layui-form-label">
-                    <span class="x-red">*</span>手机号
+                    <span class="x-red">* </span>手机号
                 </label>
                 <div class="layui-input-block">
                     <input type="text" id="mobile" value="" style="width: 93%" name="mobile" lay-verify="mobile" autocomplete="off" class="layui-input">
@@ -81,7 +82,7 @@
             </div>
             <div class="layui-form-item">
                 <label for="email" class="layui-form-label">
-                    <span class="x-red"></span>邮箱
+                    邮箱
                 </label>
                 <div class="layui-input-block">
                     <input type="email" id="email" style="width: 93%" name="email" lay-verify="email" autocomplete="off" class="layui-input">
@@ -90,7 +91,7 @@
 
             <div class="layui-form-item">
                 <label for="mobile" class="layui-form-label">
-                    <span class="x-red">*</span>角色
+                    <span class="x-red">* </span>角色
                 </label>
                 <div class="layui-input-block">
                     <#list boxJson as json>

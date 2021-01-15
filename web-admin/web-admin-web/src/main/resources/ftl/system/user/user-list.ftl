@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <title>用户管理</title>
-    <#include "/common/head.ftl" />
+    <#include "../../common/head.ftl" />
 </head>
 
 <body>

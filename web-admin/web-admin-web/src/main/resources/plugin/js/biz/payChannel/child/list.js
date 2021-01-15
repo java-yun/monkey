@@ -97,7 +97,7 @@ layui.config({
 	         done: function(res, curr, count){
 	        	 //如果是异步请求数据方式，res即为你接口返回的信息。curr为当前页码。count为数据总量
 	        	 _data = res.list;
-       	  }
+	   		 }
 		});
 		
 		//监听工具条

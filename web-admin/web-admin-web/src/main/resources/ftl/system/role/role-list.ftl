@@ -106,15 +106,28 @@
         table.render({
             id: 'roleList',
             elem: '#roleList',
-            url: 'showRoleList',
+            url: 'showRoleList?v=' + new Date().getTime(),
             cols: [[
                 {checkbox: true, fixed: true, width: '5%'},
-                {field: 'roleName', title: '角色名称', width: '20%', sort: true},
-                {field: 'description', title: '角色描述', width: '20%', sort: true},
-                {field: 'createDate', title: '创建时间', width: '20%', template: '<div>{{ layui.laytpl.toDateString(d.createDate) }}</div>'},
+                {field: 'roleName', align: 'center', title: '角色名称', width: '20%', sort: true},
+                {field: 'description', align: 'center', title: '角色描述', width: '20%', sort: true},
+                {field: 'createUser', align: 'center', title: '创建人', width: '110'},
+                {field: 'updateUser', align: 'center', title: '修改人', width: '110'},
+                {field: 'createTime', align: 'center', title: '创建时间', width: '180', templet: '<div>{{ layui.laytpl.toDateString(d.createTime) }}</div>'},
+                {field: 'updateTime', align: 'center', title: '修改时间', width: '180', templet: '<div>{{ layui.laytpl.toDateString(d.updateTime) }}</div>'},
                 {field: 'id', title: '操作', width: '20%', toolbar: "#toolBar"}
             ]],
-            page: true,
+            page: {
+                layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+                first: '首页',
+                last: '尾页'
+            },
+            limit: 20,
+            limits: [20, 50, 100],
+            request: {
+                pageName: 'page',
+                limitName: 'limit'
+            },
             height: 'full-83'
         });
 

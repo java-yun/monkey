@@ -43,8 +43,8 @@ public class ProductApiApplication implements CommandLineRunner {
     public void run(String... args) {
         if (!this.productService.hasProductRecord()) {
             this.initProduct();
-            this.syncProductToEs();
         }
+        this.syncProductToEs();
     }
 
     private void syncProductToEs() {
