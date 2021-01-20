@@ -23,7 +23,7 @@ public class RedisMessageConfig {
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, MessageListenerAdapter testAdapter) {
         var container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        //订阅了一个叫chat 的通道
+        //订阅了一个叫 channel.test 的通道
         container.addMessageListener(testAdapter, new PatternTopic("channel.test"));
         //这个container 可以添加多个 messageListener
 //        container.addMessageListener(CatAdapter, new PatternTopic("cat"));
