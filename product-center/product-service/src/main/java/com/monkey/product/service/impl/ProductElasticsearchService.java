@@ -9,7 +9,7 @@ import com.monkey.product.entity.Product;
 import com.monkey.product.entity.ProductMessage;
 import com.monkey.product.service.BaseElasticsearchService;
 import com.monkey.product.service.ProductService;
-import com.monkey.product.thread.ProductThreadPoolManager;
+import com.monkey.product.thread.ProductIndexThreadPoolManager;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.DocWriteRequest;
 import org.elasticsearch.action.bulk.BulkProcessor;
@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 /**
@@ -41,6 +38,7 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
     private int productParallel;
 
     private final ProductService productService;
+
 
     public ProductElasticsearchService(ElasticsearchOperateRepository elasticsearchOperateRepository, ProductService productService) {
         super(elasticsearchOperateRepository);
@@ -65,11 +63,11 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
     @Override
     protected void syncDataToEs(String indexName) {
         var bulkProcessor = super.elasticsearchOperateRepository.initBulkProcessor(BusinessConstants.PRODUCT_BULK_SIZE);
-        var queue = new LinkedBlockingQueue<ProductMessage>(10);
-        ProductThreadPoolManager.getInstance().wrapSubmit(new Producer(queue));
+        var queue = new LinkedBlockingQueue<ProductMessage>(100);
+        ProductIndexThreadPoolManager.getInstance().wrapSubmit(new Producer(queue));
         var countDownLatch = new CountDownLatch(productParallel);
         IntStream.range(0, productParallel).forEach((i) ->
-                ProductThreadPoolManager.getInstance().wrapSubmit(new Consumer(queue, indexName, bulkProcessor, countDownLatch))
+                ProductIndexThreadPoolManager.getInstance().wrapSubmit(new Consumer(queue, indexName, bulkProcessor, countDownLatch))
         );
         try {
             countDownLatch.await();
@@ -82,7 +80,7 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
                 var awaitClose = bulkProcessor.awaitClose(120L, TimeUnit.SECONDS);
                 log.info("whether the index {} insertion was completed in time: {}", indexName, awaitClose);
             } catch (InterruptedException e) {
-                log.error("bulkProcessor awaitClose or refresh index {} exception", indexName, e);
+                log.error("bulkProcessor awaitClose index {} exception", indexName, e);
             }
         }
     }
@@ -124,7 +122,7 @@ public class ProductElasticsearchService extends BaseElasticsearchService {
                         log.info("put message to queue finished");
                         break;
                     }
-                    queue.put(ProductMessage.builder().products(products).stop(true).build());
+                    queue.put(ProductMessage.builder().products(products).build());
                     productId = products.get(products.size() - 1).getId();
                     times++;
                 }

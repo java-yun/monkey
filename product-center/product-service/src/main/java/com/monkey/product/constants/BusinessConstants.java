@@ -21,12 +21,12 @@ public final class BusinessConstants {
     /**
      * 商品 es bulk size
      */
-    public static final int PRODUCT_BULK_SIZE = 5000;
+    public static final int PRODUCT_BULK_SIZE = 500;
 
     /**
      * 商品 批量查询 大小 db
      */
-    public static final int PRODUCT_BATCH_QUERY_SIZE = 10000;
+    public static final int PRODUCT_BATCH_QUERY_SIZE = 400;
 
     /**
      * 商品 批量插入 大小 db

@@ -168,8 +168,8 @@ public class ElasticsearchOperateRepository {
                 .setBulkSize(new ByteSizeValue(10, ByteSizeUnit.MB))
                 //固定刷新的时间频率
                 .setFlushInterval(TimeValue.timeValueSeconds(5L))
-                //并发线程数
-                .setConcurrentRequests(4)
+                //是否允许并发，0不允许，大于0允许
+                .setConcurrentRequests(1)
                 //重试补偿策略
                 .setBackoffPolicy(BackoffPolicy.constantBackoff(TimeValue.timeValueSeconds(1L), 3))
                 .build();

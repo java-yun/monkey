@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * 数据库链接池druid监控平台的配置  访问路径 http://localhost:8080/druid/index.html
+ * 数据库链接池druid监控平台的配置  访问路径 http://localhost:8083/druid/index.html
  * @author jiangyun
  * @version 0.0.1
  * @date 2020/11/12 13:50

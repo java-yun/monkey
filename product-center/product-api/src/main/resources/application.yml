@@ -97,3 +97,11 @@ log:
 monkey:
   product:
     parallel: 10
+
+    thread:
+      pool:
+        core-size: 5
+        max-size: 60
+        queue-size: 150
+        keep-alive-seconds: 60
+

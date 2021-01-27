@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 商品初始化 service 实现
@@ -56,7 +57,7 @@ public class ProductInitServiceImpl implements ProductInitService {
     }
 
     @Override
-    public void init() {
+    public void init(CountDownLatch countDownLatch) {
         for (int i = 0; i < FOR_LENGTH; i++) {
             var products = Lists.newArrayListWithCapacity(BusinessConstants.PRODUCT_BATCH_INSERT_SIZE);
             for (int j = 0; j < BusinessConstants.PRODUCT_BATCH_INSERT_SIZE; j++) {
@@ -90,6 +91,7 @@ public class ProductInitServiceImpl implements ProductInitService {
             this.batchRepository.batchInsert(products);
         }
         log.info("{} insert data to db success......", Thread.currentThread().getName());
+        countDownLatch.countDown();
     }
 
 }

@@ -13,6 +13,7 @@ public class BizCode implements Code {
     public static final BizCode RPC_TIMEOUT;
     public static final BizCode RESOURCE_EXISTS;
     public static final BizCode NOT_FOUND;
+    public static final BizCode THREAD_POOL_PARAM_ERROR;
 
     public static final BizCode DATA_SYNC_ERROR;
     public static final BizCode DATA_INSERT_ERROR;
@@ -34,6 +35,7 @@ public class BizCode implements Code {
         RPC_TIMEOUT = new BizCode("998", "RPC调用超时", CodePrefix.ERROR);
         RESOURCE_EXISTS = new BizCode("997", "资源已存在", CodePrefix.ERROR);
         NOT_FOUND = new BizCode("996", "资源不存在", CodePrefix.ERROR);
+        THREAD_POOL_PARAM_ERROR = new BizCode("995", "线程池参数未设置", CodePrefix.ERROR);
 
         DATA_SYNC_ERROR = new BizCode("001", "数据同步异常", CodePrefix.COMMON);
         DATA_INSERT_ERROR = new BizCode("002", "数据插入异常", CodePrefix.COMMON);

@@ -2,9 +2,11 @@ package com.monkey.common.thread;
 
 import com.google.common.collect.Maps;
 import org.slf4j.MDC;
+import org.springframework.lang.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 线程池管理  基类
@@ -16,37 +18,24 @@ public abstract class ThreadPoolManager {
 
     private static final Map<String, ThreadPoolExecutor> EXECUTOR_MAP = Maps.newConcurrentMap();
 
-    private boolean useFixedContext = false;
-    private Map<String, String> fixedContext;
-
     private final ThreadPoolExecutor executor;
 
-    protected ThreadPoolManager(Map<String, String> fixedContext) {
+    protected ThreadPoolManager(String threadNamePrefix) {
         if (EXECUTOR_MAP.containsKey(threadPoolName())) {
             executor = EXECUTOR_MAP.get(threadPoolName());
         } else {
-            executor = initThreadPoolExecutor();
-        }
-        this.fixedContext = fixedContext;
-        useFixedContext = (fixedContext != null);
-    }
-
-    protected ThreadPoolManager() {
-        if (EXECUTOR_MAP.containsKey(threadPoolName())) {
-            executor = EXECUTOR_MAP.get(threadPoolName());
-        } else {
-            executor = initThreadPoolExecutor();
+            executor = initThreadPoolExecutor(threadNamePrefix);
         }
     }
 
-    private ThreadPoolExecutor initThreadPoolExecutor() {
+    private ThreadPoolExecutor initThreadPoolExecutor(String threadNamePrefix) {
         var threadPoolExecutor = new ThreadPoolExecutor(
                 corePoolSize(),
                 maxPoolSize(),
                 keepAliveTime(),
                 TimeUnit.SECONDS,
-                new ArrayBlockingQueue<>(queueSize()),
-                Executors.defaultThreadFactory(),
+                new LinkedBlockingQueue<>(queueSize()),
+                new NamedThreadFactory(threadNamePrefix),
                 new ThreadPoolExecutor.CallerRunsPolicy()
         );
         EXECUTOR_MAP.put(threadPoolName(), threadPoolExecutor);
@@ -142,7 +131,7 @@ public abstract class ThreadPoolManager {
     protected abstract String threadPoolName();
 
     private Map<String, String> getContextForTask() {
-        return useFixedContext ? fixedContext : MDC.getCopyOfContextMap();
+        return MDC.getCopyOfContextMap();
     }
 
     private <T> Callable<T> wrapCallable(Callable<T> task, final Map<String, String> context) {
@@ -183,5 +172,31 @@ public abstract class ThreadPoolManager {
                 }
             }
         };
+    }
+
+    public static class NamedThreadFactory implements ThreadFactory {
+
+        private static final AtomicInteger POOL_NUMBER = new AtomicInteger(1);
+        private final ThreadGroup group;
+        private final AtomicInteger threadNumber = new AtomicInteger(1);
+        private final String namePrefix;
+
+        NamedThreadFactory(String namePrefix) {
+            var s = System.getSecurityManager();
+            group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+            this. namePrefix = "pool-" + POOL_NUMBER.getAndIncrement() + "-thread-" + namePrefix + "-";
+        }
+
+        @Override
+        public Thread newThread(@Nullable Runnable runnable) {
+            var thread = new Thread(group, runnable, this.namePrefix + this.threadNumber.getAndIncrement(), 0);
+            if (thread.isDaemon()) {
+                thread.setDaemon(false);
+            }
+            if (thread.getPriority() != Thread.NORM_PRIORITY) {
+                thread.setPriority(Thread.NORM_PRIORITY);
+            }
+            return thread;
+        }
     }
 }

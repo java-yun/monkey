@@ -10,22 +10,24 @@ import java.util.Objects;
  * @version 0.0.1
  * @date 2020/11/3 15:19
  */
-public class ProductThreadPoolManager extends ThreadPoolManager {
+public class ProductIndexThreadPoolManager extends ThreadPoolManager {
 
-    private static volatile ProductThreadPoolManager threadPoolManager = null;
+    private static volatile ProductIndexThreadPoolManager threadPoolManager = null;
 
     private static final Object LOCK = new Object();
 
-    private static final String THREAD_POOL_NAME = "com.monkey.product";
+    private static final String THREAD_POOL_NAME = "monkey.product.index";
 
-    private ProductThreadPoolManager() {
-        super();
+    private static final String THREAD_NAME_PREFIX = "product-index";
+
+    private ProductIndexThreadPoolManager(String threadNamePrefix) {
+        super(threadNamePrefix);
     }
 
-    public static ProductThreadPoolManager getInstance() {
+    public static ProductIndexThreadPoolManager getInstance() {
         synchronized (LOCK) {
             if (Objects.isNull(threadPoolManager)) {
-                threadPoolManager = new ProductThreadPoolManager();
+                threadPoolManager = new ProductIndexThreadPoolManager(THREAD_NAME_PREFIX);
             }
         }
         return threadPoolManager;
