@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class ProductIndexThreadPoolManager extends ThreadPoolManager {
 
-    private static volatile ProductIndexThreadPoolManager threadPoolManager = null;
+    private static volatile ProductIndexThreadPoolManager threadPoolManager;
 
     private static final Object LOCK = new Object();
 

@@ -12,7 +12,7 @@ import java.util.Objects;
  */
 public class ProductMainThreadPoolManager extends ThreadPoolManager {
 
-    private static volatile ProductMainThreadPoolManager threadPoolManager = null;
+    private static volatile ProductMainThreadPoolManager threadPoolManager;
 
     private static final Object LOCK = new Object();
 
