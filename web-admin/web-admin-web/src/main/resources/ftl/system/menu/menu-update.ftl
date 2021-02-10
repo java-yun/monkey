@@ -141,7 +141,8 @@ To change this template use File | Settings | File Templates.-->
         });
 
         //自定义验证规则
-        const type = $('#menuType');
+        const type = $('#menuType').data('type');
+        const pCode = $('[name=pCode]').val();
         form.verify({
             menuType: function (v) {
                 console.info(v === '')
@@ -150,7 +151,7 @@ To change this template use File | Settings | File Templates.-->
                 }
             },
             pName: function (v) {
-                if (type.val() !== '2' && v.trim() === '') {
+                if (pCode !== "" && v.trim() === '') {
                     return '父菜单不能为空';
                 }
             },
@@ -160,15 +161,15 @@ To change this template use File | Settings | File Templates.-->
                 }
             },
             url: function (v) {
-                if (type.val() === '1') {
+                if (type === '1') {
                     $('#url').val('');
                 }
-                if (type.val() === '0' && v.trim() === '') {
+                if (type === '0' && pCode !== "" && v.trim() === '') {
                     return 'url不能为空';
                 }
             },
             permission: function (v) {
-                if ((type.val() === '1' || type.val() === '0') && v.trim() === '') {
+                if (pCode !== "" && v.trim() === '') {
                     return '权限不能为空';
                 }
             },

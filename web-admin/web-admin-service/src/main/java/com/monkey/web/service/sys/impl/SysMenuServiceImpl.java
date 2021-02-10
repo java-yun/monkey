@@ -4,7 +4,6 @@ import com.monkey.common.utils.Detect;
 import com.monkey.common.utils.IsValid;
 import com.monkey.web.bo.UserVisibleMenu;
 import com.monkey.web.dao.SysMenuRepository;
-import com.monkey.web.dao.SysRoleMenuRepository;
 import com.monkey.web.entity.SysMenu;
 import com.monkey.web.exception.WebErrorCode;
 import com.monkey.web.exception.WebException;
@@ -131,7 +130,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     private void checkCommonParam(SysMenu sysMenu) {
-        new WebParamCheckUtils.Builder().menuName(sysMenu.getName()).menuLevel(sysMenu.getLevel()).menuType(sysMenu.getMenuType()).build().checkParam();
+        new WebParamCheckUtils.Builder().menuName(sysMenu.getName()).menuType(sysMenu.getMenuType()).build().checkParam();
         if (IsValid.fromValue(sysMenu.getIsTop()) == IsValid.invalid && Detect.isNullOrEmpty(sysMenu.getPCode())) {
             log.error("The parent code of a non-top-level menu is null or empty");
             throw WebException.throwException(WebErrorCode.PARENT_CODE_EMPTY);

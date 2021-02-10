@@ -2,14 +2,15 @@ package com.monkey.common.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.*;
+import com.aliyun.oss.model.GetObjectRequest;
+import com.aliyun.oss.model.OSSObject;
+import com.aliyun.oss.model.ObjectMetadata;
+import com.aliyun.oss.model.PutObjectResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.Objects;
 
 /**
  * 阿里云 oss
@@ -26,7 +27,10 @@ public class OSSUtils {
     public static final String BUCKET_NAME;
     public static final String OSS_URL;
 
+    public static JSONObject fileExtensionContentType;
+
     static{
+        initFileExtensionContentType();
         END_POINT = PropertiesUtil.getProperty("endPoint");
         ACCESS_KEY_ID = PropertiesUtil.getProperty("accessKeyId");
         ACCESS_KEY_SECRET = PropertiesUtil.getProperty("accessKeySecret");
@@ -36,49 +40,65 @@ public class OSSUtils {
         log.info("endPoint:{}, accessKeyId:{}, accessKeySecret:{}, bucketName:{}, ossUrl:{}",END_POINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET, BUCKET_NAME, OSS_URL);
     }
 
-    public static OSSClient initClient() {
+    private static void initFileExtensionContentType() {
+        var inputStream = OSSUtils.class.getResourceAsStream("/fileExtensionContentType.json");
+        try {
+            var builder = new StringBuilder();
+            byte [] b = new byte[1024];
+            int len;
+            while((len = inputStream.read(b)) != -1){
+                builder.append(new String(b, 0, len));
+            }
+            fileExtensionContentType = JSONObject.parseObject(builder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static OSSClient initClient() {
         return new OSSClient(END_POINT, ACCESS_KEY_ID, ACCESS_KEY_SECRET);
     }
 
     /**
      * 新建Bucket --Bucket权限:私有
      *
-     * @param bucketName
-     *            bucket名称
-     * @return true 新建Bucket成功
+     * @param bucketName bucket名称
      */
-    public static boolean createBucket(OSSClient client, String bucketName) {
-        Bucket bucket = client.createBucket(bucketName);
-        return bucketName.equals(bucket.getName());
+    public static void createBucket(String bucketName) {
+        OSSClient client = initClient();
+        client.createBucket(bucketName);
+        client.shutdown();
     }
 
     /**
      * 删除Bucket
-     *
-     * @param bucketName
-     *            bucket名称
+     * @param bucketName bucket名称
      */
-    public static void deleteBucket(OSSClient client, String bucketName) {
+    public static void deleteBucket(String bucketName) {
+        OSSClient client = initClient();
         client.deleteBucket(bucketName);
-        log.info("删除" + bucketName + "Bucket成功");
+        client.shutdown();
     }
 
     /**
      * 向阿里云的OSS存储中存储文件 --file也可以用InputStream替代
-     *
-     * @param client
-     *            OSS客户端
-     * @param file
-     *            上传文件
-     * @param bucketName
-     *            bucket名称
-     * @param diskName
-     *            上传文件的目录 --bucket下文件的路径
-     * @return String 唯一MD5数字签名
+
+     * @param file 上传文件
+     * @param bucketName bucket名称
+     * @param diskName 上传文件的目录 --bucket下文件的路径
+     * @return true 成功
      */
-    public static boolean uploadObject2OSS(OSSClient client, File file, String bucketName, String diskName) throws FileNotFoundException {
-        InputStream is = new FileInputStream(file);
+    public static boolean upload(File file, String bucketName, String diskName){
+        InputStream is = null;
+        OSSClient client = initClient();
         try {
+            is = new FileInputStream(file);
             String fileName = file.getName();
             // 创建上传Object的Metadata
             ObjectMetadata metadata = new ObjectMetadata();
@@ -95,7 +115,10 @@ public class OSSUtils {
         } finally {
             log.info("关闭文件的输入流！");
             try {
-                is.close();
+                if (Objects.nonNull(is)) {
+                    is.close();
+                }
+                client.shutdown();
             } catch (Exception e) {
                 log.error("关闭文件的输入流异常", e);
             }
@@ -104,19 +127,15 @@ public class OSSUtils {
     }
 
     /**
-     * 向阿里云的OSS存储中存储文件 --file也可以用InputStream替代
+     * 向阿里云的OSS存储中存储文件
      *
-     * @param client
-     *            OSS客户端
-     * @param is
-     *            上传文件
-     * @param bucketName
-     *            bucket名称
-     * @param diskName
-     *            上传文件的目录 --bucket下文件的路径
-     * @return String 唯一MD5数字签名
+     * @param is InputStream
+     * @param bucketName bucket名称
+     * @param diskName 上传文件的目录 --bucket下文件的路径
+     * @return true 成功
      */
-    public static boolean uploadInputStreamObject2OSS(OSSClient client, InputStream is, String fileName, String bucketName, String diskName) throws FileNotFoundException {
+    public static boolean upload(InputStream is, String fileName, String bucketName, String diskName) {
+        OSSClient client = initClient();
         try {
             log.info("upload start");
             // 创建上传Object的Metadata
@@ -149,49 +168,40 @@ public class OSSUtils {
     }
 
     /**
-     * 根据key获取OSS服务器上的文件到本地
+     * 根据key下载OSS服务器上的文件到本地
      *
-     * @param client
-     *            OSS客户端
-     * @param bucketName
-     *            bucket名称
-     * @param yourLocalFile
-     *            文件路径
-     * @param key
-     *            Bucket下的文件的路径名+文件名
+     * @param bucketName bucket名称
+     * @param yourLocalFile 文件路径
+     * @param key Bucket下的文件的路径名+文件名
      */
-    public static void getOSS2LocalFile(OSSClient client, String bucketName, String yourLocalFile, String key) {
+    public static void downloadFile(String bucketName, String yourLocalFile, String key) {
+        OSSClient client = initClient();
         client.getObject(new GetObjectRequest(bucketName, key), new File(yourLocalFile));
+        client.shutdown();
     }
 
     /**
      * 根据key获取OSS服务器上的文件输入流
      *
-     * @param client
-     *            OSS客户端
-     * @param bucketName
-     *            bucket名称
-     * @param diskName
-     *            文件路径
-     * @param key
-     *            Bucket下的文件的路径名+文件名
+     * @param bucketName bucket名称
+     * @param diskName 文件路径
+     * @param key Bucket下的文件的路径名+文件名
+     * @return InputStream
      */
-    public static InputStream getOSS2InputStream(OSSClient client, String bucketName, String diskName, String key) {
+    public static InputStream getInputStream(String bucketName, String diskName, String key) {
+        OSSClient client = initClient();
         OSSObject ossObj = client.getObject(bucketName, diskName + key);
-        return ossObj.getObjectContent();
+        InputStream inputStream = ossObj.getObjectContent();
+        client.shutdown();
+        return inputStream;
     }
 
     /**
      * 根据key删除OSS服务器上的文件
      *
-     * @param client
-     *            OSS客户端
-     * @param bucketName
-     *            bucket名称
-     * @param diskName
-     *            文件路径
-     * @param key
-     *            Bucket下的文件的路径名+文件名
+     * @param bucketName bucket名称
+     * @param diskName 文件路径
+     * @param key Bucket下的文件的路径名+文件名
      */
     public static void deleteFile(OSSClient client, String bucketName, String diskName, String key) {
         client.deleteObject(bucketName, diskName + key);
@@ -201,101 +211,21 @@ public class OSSUtils {
     /**
      * 通过文件名判断并获取OSS服务文件上传时文件的contentType
      *
-     * @param fileName
-     *            文件名
+     * @param fileName 文件名
      * @return 文件的contentType
      */
     public static String getContentType(String fileName) {
+        String contentType = "text/html";
         String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
-        if ("bmp".equalsIgnoreCase(fileExtension)) {
-            return "image/bmp";
-        }
-        if ("gif".equalsIgnoreCase(fileExtension)) {
-            return "image/gif";
-        }
-        if ("jpeg".equalsIgnoreCase(fileExtension) || "jpg".equalsIgnoreCase(fileExtension) || "png".equalsIgnoreCase(fileExtension)) {
-            return "image/jpeg";
-        }
-        if ("html".equalsIgnoreCase(fileExtension)) {
-            return "text/html";
-        }
-        if ("txt".equalsIgnoreCase(fileExtension)) {
-            return "text/plain";
-        }
-        if ("vsd".equalsIgnoreCase(fileExtension)) {
-            return "application/vnd.visio";
-        }
-        if ("ppt".equalsIgnoreCase(fileExtension) || "pptx".equalsIgnoreCase(fileExtension)) {
-            return "application/vnd.ms-powerpoint";
-        }
-        if ("doc".equalsIgnoreCase(fileExtension) || "docx".equalsIgnoreCase(fileExtension)) {
-            return "application/msword";
-        }
-        if ("xls".equalsIgnoreCase(fileExtension) ) {
-            return "application/vnd.ms-excel";
-        }
-        if ("xlsx".equalsIgnoreCase(fileExtension) ) {
-            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        }
-        if ("xml".equalsIgnoreCase(fileExtension)) {
-            return "text/xml";
-        }
-        if ("mp4".equalsIgnoreCase(fileExtension)) {
-            return "video/mp4";
-        }
-        if ("flv".equalsIgnoreCase(fileExtension)) {
-            return "video/x-flv";
-        }
-        if ("swf".equalsIgnoreCase(fileExtension)) {
-            return "application/x-shockwave-flash";
-        }
-        if ("mkv".equalsIgnoreCase(fileExtension)) {
-            return "video/x-matroska";
-        }
-        if ("avi".equalsIgnoreCase(fileExtension)) {
-            return "video/x-msvideo";
-        }
-        if ("rm".equalsIgnoreCase(fileExtension) || "rmvb".equalsIgnoreCase(fileExtension)) {
-            return "application/vnd.rn-realmedia";
-        }
-        if ("mpeg".equalsIgnoreCase(fileExtension) || "mpg".equalsIgnoreCase(fileExtension)) {
-            return "video/mpeg";
-        }
-        if ("ogg".equalsIgnoreCase(fileExtension)) {
-            return "video/x-theora+ogg";
-        }
-        if ("ogv".equalsIgnoreCase(fileExtension)) {
-            return "video/ogg";
-        }
-        if ("mov".equalsIgnoreCase(fileExtension)) {
-            return "video/quicktime";
-        }
-        if ("wmv".equalsIgnoreCase(fileExtension)) {
-            return "video/x-ms-wmv";
-        }
-        if ("webm".equalsIgnoreCase(fileExtension)) {
-            return "video/webm";
-        }
-        if ("mp3".equalsIgnoreCase(fileExtension)) {
-            return "audio/mpeg";
-        }
-        if ("wav".equalsIgnoreCase(fileExtension)) {
-            return "audio/x-wav";
-        }
-        if ("mid".equalsIgnoreCase(fileExtension)) {
-            return "audio/midi";
-        }
-        if ("apk".equalsIgnoreCase(fileExtension)) {
-            return "application/vnd.android.package-archive";
-        }
-        return "text/html";
+        contentType = fileExtensionContentType.getString(fileExtension);
+        return contentType;
     }
 
     /**
      * 拼接完整的oss链接url
-     * @param relativePath
-     * @param ossUrl
-     * @return
+     * @param relativePath relativePath
+     * @param ossUrl ossUrl
+     * @return String
      */
     public static String packageOssStrUrl(String relativePath, String ossUrl){
         if(StringUtils.isEmpty(relativePath)){
@@ -303,4 +233,5 @@ public class OSSUtils {
         }
         return ossUrl + relativePath;
     }
+
 }
